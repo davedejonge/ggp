@@ -9,6 +9,7 @@ import org.ggp.base.util.gdl.grammar.GdlSentence;
 import org.ggp.base.util.gdl.grammar.GdlTerm;
 import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
+import org.ggp.base.util.statemachine.StateMachine;
 import org.ggp.base.util.statemachine.cache.CachedStateMachine;
 import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
@@ -72,8 +73,8 @@ public class MCTSPlayer extends BasicPlayer {
 		
 		this.name = name;
 		
-		this.USE_PROPNET_FOR_MULTIPLAYER_GAMES = params.USE_PROPNET;
-		this.USE_PROPNET_FOR_SINGLEPLAYER_GAMES = params.USE_PROPNET;
+		/*this.USE_PROPNET_FOR_MULTIPLAYER_GAMES = params.USE_PROPNET;
+		this.USE_PROPNET_FOR_SINGLEPLAYER_GAMES = params.USE_PROPNET;*/
 		
 		this.monitor.setTitle(this.getName());
 		
@@ -125,7 +126,10 @@ public class MCTSPlayer extends BasicPlayer {
 			
 			//Check memory and do something if too much memory is used.
 			if(monitor.getUsedMemoryMB() > 1000){
-				getProverStateMachine().prune();
+				
+				if(getStateMachine() instanceof CachedStateMachine){
+					((CachedStateMachine)getStateMachine()).prune();
+				}
 				System.gc(); //Calling the Garbage collector is bad practice. We should find a better way to deal with memory issues.
 				graph.increaseExpansionThreshold(1);
 				System.out.println("MCTSPlayer.findBestMove() increasing expand threshold to: " + graph.getExpansionThreshold());
@@ -195,6 +199,17 @@ public class MCTSPlayer extends BasicPlayer {
 		}
 		
 		return name;
+	}
+
+
+
+
+
+
+
+	@Override
+	public StateMachine getInitialStateMachine() {
+		return new PropnetStateMachine();
 	}
 	
 	
