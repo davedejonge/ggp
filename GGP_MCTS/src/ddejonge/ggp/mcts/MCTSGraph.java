@@ -888,7 +888,7 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 		}
 
 		if(node.getOutgoingEdges() == null){
-			System.out.println("MCTSGraph.getBestChildEdge() node.outgoingEdges == null");
+			System.out.println("MCTSGraph.getBestChildEdge() node.outgoingEdges == null node.id: " + node.getId() + " depth: " + node.getDepth());
 			return null;
 		}
 		
