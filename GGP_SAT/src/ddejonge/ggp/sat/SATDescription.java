@@ -313,15 +313,6 @@ public class SATDescription {
 			cnf2 = SATUtils.disjunctCNFwithLiteral(cnf2, true, head);
 			gameRules.addAll(cnf2);
 			
-			//TODO: REMOVE DEBUG CODE
-			/*if(head.getGdlSentence().getName().equals(GdlPool.GOAL) && head.getGdlSentence().toString().contains("xplayer") && head.getGdlSentence().toString().contains("50")){ 
-				System.out.println(cnf1);
-				System.out.println(cnf2);
-			}*/
-			if(head.getGdlSentence().toString().contains("diagonal x")){
-				System.out.println(cnf1);
-				System.out.println(cnf2);
-			}
 		}
 	}
 	

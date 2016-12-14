@@ -36,7 +36,7 @@ import ddejonge.ggp.sat.logic.SimpleConjunction;
 import ddejonge.ggp.sat.logic.XOR;
 import ddejonge.ggp.tools.dataStructures.ArraySet;
 
-public class SATProver {
+public class SATProver_OLD {
 
 	//STATIC FIELDS
 
@@ -61,13 +61,18 @@ public class SATProver {
 	private List<Clause> stateAsClauses = new ArrayList<>();
 	private List<Clause> movesAsClauses = new ArrayList<>();
 	
+	//these values are reset to false after every prove.
+	// in order to call prove() again, you first must set the state, moves, and hypothesis again.
+	private boolean stateSet = false;
+	private boolean movesSet = false;
+	private boolean hypothesisSet = false;
 	
 	//CONSTRUCTORS
-	public SATProver(List<GdlRule> groundedDescription, List<GdlSentence> groundedBasePropositions, List<GdlSentence> groundedDoesPropositions, List<Role> roles){
+	public SATProver_OLD(List<GdlRule> groundedDescription, List<GdlSentence> groundedBasePropositions, List<GdlSentence> groundedDoesPropositions, List<Role> roles){
 		satDescription = new SATDescription(groundedDescription, roles);
 	}
 	
-	public SATProver(SATDescription satDescription){
+	public SATProver_OLD(SATDescription satDescription){
 		this.satDescription = satDescription;
 	}
 
@@ -76,6 +81,84 @@ public class SATProver {
 	
 	
 	//METHODS
+	void setState(MachineState state){
+		
+		stateSet = true;
+		
+		//If the given state is null, then use the state that was already set.
+		if(this.state == state){
+			return;
+		}
+		
+		this.state = state;
+		this.stateAsClauses.clear();
+		addToClauses(state, stateAsClauses);
+	}
+	
+	void keepState(){
+		stateSet = true;
+	}
+	
+	void clearState(){
+		stateSet = true;
+		state = null;
+		stateAsClauses.clear();
+	}
+	
+	void setMoves(List<Move> moves){
+		
+		movesSet = true;
+		
+		//If the given moves are null, then use the moves that were already set.
+		if(moves == null || this.moves.equals(moves)){
+			return;
+		}
+		
+		this.moves.clear();
+		this.moves.addAll(moves);
+		
+		//first clear the list of moves as clauses.
+		movesAsClauses.clear();
+		
+		//then fill it again with the new moves.
+		addToClauses(moves, movesAsClauses);
+	}
+	
+	void clearMoves(){
+		movesSet = true;
+		moves.clear();
+		movesAsClauses.clear();
+		
+		adsfj;
+		
+		//THIs is causing problems!
+		//If moves are irrelevant we simply clear the moves. However, there is also a rule that says that
+		// every player must always make exactly one move. Therefore, the set of clauses is always unsatisfiable, and every proof will return true.
+		
+	}
+	
+	void keepMoves(){
+		movesSet = true;
+	}
+	
+	void setHypothesis(GdlSentence hypothesis){
+		
+		hypothesisSet = true;
+		
+		//If the given hypothesis is null, then use the hypothesis that was already set.
+		if(hypothesis == null || hypothesis == this.hypothesis){
+			return;
+		}
+		
+		this.hypothesis = hypothesis;
+		Proposition prop = GDL2SATConverter.toSAT(this.satDescription, hypothesis);
+		this.hypothesisAsClause = new Clause(prop, false);
+	}
+	
+	void keepHypothesis(){
+		hypothesisSet = true;
+	}
+	
 	
 	/** 
 	 * Converts the given state into a list of clauses and adds them to the given list.
@@ -139,144 +222,62 @@ public class SATProver {
 	}
 	
 	
-	private void setState(MachineState state){
-		
-		//if both the given state, and the previous state are null, then something is wrong.
-		if(state == null && this.state == null){
-			throw new RuntimeException("SATProver.proveStateProperty() Error! state is not given!");
-		}
-		
-		//If the given state is null, or if the given state is equal to the previous state, then we don't need
-		//to update the state.
-		if(state == null || state.equals(this.state)){
-			return;
-		}
-		
-		//set the state.
-		this.state = state;
-		this.stateAsClauses.clear();
-		addToClauses(state, stateAsClauses);
-	}
 	
-	void setMoves(List<Move> moves){
+	/**
+	 * Returns true if the current hypothesis can be proved in the current state and assuming the players make the current moves. <br/>
+	 * Returns false if the given hypothesis is proved to be false, and returns null if we can neither prove nor disprove it. <br/>
+	 * <br/>
+	 * State and moves are allowed to be null in case they are not relevant.
+	 * @param state
+	 * @param moves
+	 * @param hypothesis
+	 * @return
+	 */
+	public Boolean prove(){
 		
-		if(moves == null && (this.moves == null || this.moves.isEmpty())){
-			throw new RuntimeException("SATProver.setMoves() Error! moves are not given!");
+		//Check that the caller has properly set everything.
+		if(!stateSet){
+			throw new RuntimeException("SATProver.prove() Error! state has not been set. Always call either setState() or keepState() or clearState() before calling prove().");
+		}
+		if(!movesSet){
+			throw new RuntimeException("SATProver.prove() Error! moves have not been set. Always call either setMoves() or keepMoves() or clearMoves() before calling prove().");
+		}
+		if(!hypothesisSet){
+			throw new RuntimeException("SATProver.prove() Error! hypothesis has not been set. Always call either setHypothesis or keepHypothesis before calling prove().");
 		}
 		
-		//If the given moves are null, then use the moves that were already set.
-		if(moves == null){
-			return;
-		}
+		//set these flags back to false so that we force the user to reset the state, moves, and hypothesis the next time.
+		stateSet = false;
+		movesSet = false;
+		hypothesisSet = false;
 		
-		//TODO: test if given moves are equal to previous moves? note however that JointMove.equals() isn't implemented.
-		
-		this.moves.clear();
-		this.moves.addAll(moves);
-		
-		//first clear the list of moves as clauses.
-		movesAsClauses.clear();
-		
-		//then fill it again with the new moves.
-		addToClauses(moves, movesAsClauses);
-	}
-	
-	private void setHypothesis(GdlSentence hypothesis){
-		
-		//if both the given hypothesis, and the previous hypothesis are null, then something is wrong.
-		if(hypothesis == null && this.hypothesis == null){
-			throw new RuntimeException("SATProver.proveStateProperty() Error! hypothesis is not given!");
-		}
-		
-		//If the given hypothesis is null, then use the hypothesis that was already set.
-		if(hypothesis == null || hypothesis.equals(this.hypothesis)){
-			return;
-		}
-		
-		this.hypothesis = hypothesis;
-		Proposition prop = GDL2SATConverter.toSAT(this.satDescription, hypothesis);
-		this.hypothesisAsClause = new Clause(prop, false);
-	}
-	
-	
-	Boolean proveGeneralHypothesis(GdlSentence hypothesis){
-		
-		//Set the current hypothesis.
-		setHypothesis(hypothesis);
-		
-		//Collect the rules of the game as clauses.
 		ArrayList<Clause> allClauses = new ArrayList<>();
 		allClauses.addAll(satDescription.gameRules);
-		allClauses.addAll(satDescription.nonProduceableRestrictions);
-		
-		//Add the hypothesis as clause.
-		allClauses.add(hypothesisAsClause);
-		
-		//Now check if the list of clauses is satisfiable.
-		Boolean isSatisfiable = isSatisfiable(allClauses, satDescription.propositionStorage.size());
-		
-		if(isSatisfiable == null){
-			return null;
-		}
-		
-		return !isSatisfiable;
-	}
-	
-	
-	Boolean proveStateProperty(MachineState state, GdlSentence hypothesis){
-		
-		//Set the current state.
-		setState(state);
-		
-		//Set the current hypothesis.
-		setHypothesis(hypothesis);
-		
-		//Collect the rules of the game as clauses.
-		ArrayList<Clause> allClauses = new ArrayList<>();
-		allClauses.addAll(satDescription.gameRules);
-		allClauses.addAll(satDescription.nonProduceableRestrictions);
-		
-		//action restrictions and legal restrictions are not relevant for state properties.
-		/*allClauses.addAll(satDescription.legalRestrictions); 
-		  allClauses.addAll(satDescription.actionRestrictions);*/
-		
-		//Add the state and the hypothesis as clauses.
-		allClauses.addAll(stateAsClauses);
-		allClauses.add(hypothesisAsClause);
-		/*allClauses.addAll(movesAsClauses);*/
-		
-		//Now check if the list of clauses is satisfiable.
-		Boolean isSatisfiable = isSatisfiable(allClauses, satDescription.propositionStorage.size());
-		
-		if(isSatisfiable == null){
-			return null;
-		}
-		
-		return !isSatisfiable;
-	}
-	
-	Boolean proveStateActionProperty(MachineState state, List<Move> moves, GdlSentence hypothesis){
-		
-		//Set the current state.
-		setState(state);
-		
-		//Set the moves
-		setMoves(moves);
-		
-		//Set the current hypothesis.
-		setHypothesis(hypothesis);
-		
-		//Collect the rules of the game as clauses.
-		ArrayList<Clause> allClauses = new ArrayList<>();
-		allClauses.addAll(satDescription.gameRules);
-		allClauses.addAll(satDescription.nonProduceableRestrictions);
-		allClauses.addAll(satDescription.legalRestrictions); 
+		allClauses.addAll(satDescription.legalRestrictions);
 		allClauses.addAll(satDescription.actionRestrictions);
+		allClauses.addAll(satDescription.nonProduceableRestrictions);
 		
-		//Add the state and the hypothesis as clauses.
 		allClauses.addAll(stateAsClauses);
-		allClauses.add(hypothesisAsClause);
 		allClauses.addAll(movesAsClauses);
+		allClauses.add(hypothesisAsClause);
+		
+		//TODO: remove debug code:
+		/*
+		System.out.println("SATProver.prove() check Printing goal clauses!");
+		for(Clause clause : allClauses){
+			for(Proposition prop : clause.getPositiveAtoms()){
+				if(prop.getGdlSentence().getName().equals(GdlPool.GOAL)){
+					System.out.println(clause);
+					break;
+				}
+			}
+			for(Proposition prop : clause.getNegativeAtoms()){
+				if(prop.getGdlSentence().getName().equals(GdlPool.GOAL)){
+					System.out.println(clause);
+					break;
+				}
+			}
+		}*/
 		
 		//Now check if the list of clauses is satisfiable.
 		Boolean isSatisfiable = isSatisfiable(allClauses, satDescription.propositionStorage.size());
@@ -287,7 +288,6 @@ public class SATProver {
 		
 		return !isSatisfiable;
 	}
-	
 	
 	
 	/**
