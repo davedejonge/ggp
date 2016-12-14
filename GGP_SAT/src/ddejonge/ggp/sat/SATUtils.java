@@ -70,7 +70,7 @@ public class SATUtils {
 		// conjunct this with the disjunction  (q_1 OR q_2 ... OR q_n) 
 		
 		CNF cnf = new CNF();
-		Clause auxiliaryClause = new Clause();
+		Clause auxiliaryClause = new Clause();  //(q_1 OR q_2 ... OR q_n) 
 		
 		for (SimpleConjunction conjunction : dnf) {
 			
@@ -113,6 +113,7 @@ public class SATUtils {
 			Clause newClause = new Clause(clause.getPositiveAtoms(), clause.getNegativeAtoms());
 			
 			newClause.addLiteral(p, positive);
+			newCnf.add(newClause);
 			
 		}		
 		

@@ -94,20 +94,97 @@ public class SATStateMachine extends StateMachine{
 	@Override
 	public int getGoal(MachineState state, Role role) throws GoalDefinitionException {
 		
-		satProver.setState(state);
+		if(state == null){
+			satProver.keepState();
+		}else{
+			satProver.setState(state);
+		}
 		
 		GdlSentence[] goalPropositions = roles2goalPropositions.get(role.toString());
 		
 		int goalValue = -1;
 		for(int i=0; i<=100; i++){
 			
+			if(goalPropositions[i] == null){
+				continue;
+			}
+			
+			satProver.keepState();	 //state has already been set at the beginning of this method.
+			satProver.clearMoves();  //moves are irrelevant for the goal.
 			satProver.setHypothesis(goalPropositions[i]);
 			
-			if(satProver.prove()){
+			Boolean result = satProver.prove();
+			
+			if(result != null && result){
 				
 				if(goalValue == -1){
 					goalValue = i;
 				}else{
+					//If the goal value had already been set before, then it means there are 2 different goal values for this state.
+					System.out.println("Previous goal value: " + goalValue);
+					System.out.println("New goal value: " + i);
+					
+					/*System.out.println();
+					System.out.println("state:");
+					System.out.println(satProver.getStateClauses());
+					System.out.println();*/
+					
+					GdlSentence true11X = GdlPool.getRelation(GdlPool.TRUE, new GdlTerm[] {GdlPool.getFunction(GdlPool.getConstant("cell"), new GdlTerm[]{GdlPool.getConstant("1"), GdlPool.getConstant("1"), GdlPool.getConstant("x")})});
+					GdlSentence true11O = GdlPool.getRelation(GdlPool.TRUE, new GdlTerm[] {GdlPool.getFunction(GdlPool.getConstant("cell"), new GdlTerm[]{GdlPool.getConstant("1"), GdlPool.getConstant("1"), GdlPool.getConstant("o")})});
+					GdlSentence true11b = GdlPool.getRelation(GdlPool.TRUE, new GdlTerm[] {GdlPool.getFunction(GdlPool.getConstant("cell"), new GdlTerm[]{GdlPool.getConstant("1"), GdlPool.getConstant("1"), GdlPool.getConstant("b")})});
+					
+					satProver.keepState();	 //state has already been set at the beginning of this method.
+					satProver.clearMoves();  //moves are irrelevant for the goal.
+					satProver.setHypothesis(true11X);
+					System.out.println(true11X.toString() + ": " + satProver.prove());
+					
+					satProver.keepState();	 //state has already been set at the beginning of this method.
+					satProver.clearMoves();  //moves are irrelevant for the goal.
+					satProver.setHypothesis(true11O);
+					System.out.println(true11O.toString() + ": " + satProver.prove());
+					
+					satProver.keepState();	 //state has already been set at the beginning of this method.
+					satProver.clearMoves();  //moves are irrelevant for the goal.
+					satProver.setHypothesis(true11b);
+					System.out.println(true11b.toString() + ": " + satProver.prove());
+					
+					satProver.keepState();	 //state has already been set at the beginning of this method.
+					satProver.clearMoves();  //moves are irrelevant for the goal.
+					satProver.setHypothesis(GdlPool.getProposition(GdlPool.getConstant("open")));
+					System.out.println("open: " + satProver.prove());
+					
+					GdlRelation lineX = GdlPool.getRelation(GdlPool.getConstant("line"), new GdlTerm[]{GdlPool.getConstant("x")});
+					satProver.keepState();	 //state has already been set at the beginning of this method.
+					satProver.clearMoves();  //moves are irrelevant for the goal.
+					satProver.setHypothesis(lineX);
+					System.out.println("lineX: " + satProver.prove());
+					
+					GdlRelation lineO = GdlPool.getRelation(GdlPool.getConstant("line"), new GdlTerm[]{GdlPool.getConstant("o")});
+					satProver.keepState();	 //state has already been set at the beginning of this method.
+					satProver.clearMoves();  //moves are irrelevant for the goal.
+					satProver.setHypothesis(lineO);
+					System.out.println("lineO: " + satProver.prove());
+					
+					for(int j=1; j<=3; j++){
+							GdlRelation row = GdlPool.getRelation(GdlPool.getConstant("row"), new GdlTerm[]{GdlPool.getConstant(""+j), GdlPool.getConstant("x")});
+							satProver.keepState();	 //state has already been set at the beginning of this method.
+							satProver.clearMoves();  //moves are irrelevant for the goal.
+							satProver.setHypothesis(row);
+							System.out.println("row_" + j + "_X" + satProver.prove());
+							
+							GdlRelation col = GdlPool.getRelation(GdlPool.getConstant("column"), new GdlTerm[]{GdlPool.getConstant(""+j), GdlPool.getConstant("x")});
+							satProver.keepState();	 //state has already been set at the beginning of this method.
+							satProver.clearMoves();  //moves are irrelevant for the goal.
+							satProver.setHypothesis(col);
+							System.out.println("col_" + j + "_X" + satProver.prove());
+					}
+					
+					GdlRelation diaX = GdlPool.getRelation(GdlPool.getConstant("diagonal"), new GdlTerm[]{GdlPool.getConstant("x")});
+					satProver.keepState();	 //state has already been set at the beginning of this method.
+					satProver.clearMoves();  //moves are irrelevant for the goal.
+					satProver.setHypothesis(diaX);
+					System.out.println("diaX" + satProver.prove());
+					
 					throw new GoalDefinitionException(state, role);
 				}
 			}
@@ -123,9 +200,20 @@ public class SATStateMachine extends StateMachine{
 	@Override
 	public boolean isTerminal(MachineState state) {
 		
-		satProver.setState(state);
+		if(state == null){
+			satProver.keepState();
+		}else{
+			satProver.setState(state);
+		}
+		satProver.clearMoves(); //moves are irrelevant.
 		satProver.setHypothesis(GdlPool.getProposition(GdlPool.TERMINAL));
-		return satProver.prove();
+		
+		Boolean result = satProver.prove();
+		if(result == null){
+			throw new RuntimeException("SATStateMachine.isTerminal() Error! isTerminal cannot be determined.");
+		}
+		
+		return result;
 	}
 	
 	
@@ -148,6 +236,8 @@ public class SATStateMachine extends StateMachine{
 				
 				GdlSentence initSentence = initProposition.getGdlSentence();
 				
+				satProver.clearState(); //the current state of the prover is irrelevant.
+				satProver.clearMoves(); //moves are clearly irrelevant.
 				satProver.setHypothesis(initSentence);
 				
 				if(this.satProver.prove()){
@@ -168,15 +258,25 @@ public class SATStateMachine extends StateMachine{
 	@Override
 	public List<Move> getLegalMoves(MachineState state, Role role) throws MoveDefinitionException {
 		
-		satProver.setState(state);
+		if(state == null){
+			satProver.keepState();
+		}else{
+			satProver.setState(state);
+		}
 		
 		List<Move> legalMoves = new ArrayList<>();
-		for(Proposition doesProp : satDescription.roleNames2doesPropositions.get(role)){
+		List<Proposition> actionPropositionsOfrole = satDescription.roleNames2doesPropositions.get(role.toString());
+		for(Proposition doesProp : actionPropositionsOfrole){
 			
-			satProver.setHypothesis(doesProp.getGdlSentence());
+			//Convert actionProposition to legal proposition.
+			Proposition legalProp = satDescription.doesProp2legalProp.get(doesProp);
+			
+			satProver.keepState(); //state has already been set at the beginning of this method.
+			satProver.clearMoves(); //moves are irrelevant.
+			satProver.setHypothesis(legalProp.getGdlSentence());
 			
 			if(satProver.prove()){
-				GdlTerm action = doesProp.getGdlSentence().get(1);
+				GdlTerm action = legalProp.getGdlSentence().get(1);
 				legalMoves.add(new Move(action));
 			}
 		}
@@ -188,7 +288,18 @@ public class SATStateMachine extends StateMachine{
 	@Override
 	public MachineState getNextState(MachineState state, List<Move> moves) throws TransitionDefinitionException {
 
-		satProver.setState(state);
+		if(state == null){
+			satProver.keepState();
+		}else{
+			satProver.setState(state);
+		}
+		
+		
+		//I don't think we would ever call getNextState twice in a row with the same state and moves.
+		//Also, I don't think we would ever call this method with a new state, but with the same moves.
+		if(moves == null){
+			throw new RuntimeException("SATStateMachine.getNextState() Error! moves should not be null!");
+		}
 		satProver.setMoves(moves);
 		
 		Set<GdlSentence> nextTrueSentences = new ArraySet<>();
@@ -198,6 +309,8 @@ public class SATStateMachine extends StateMachine{
 			
 			GdlSentence nextSentence = nextProposition.getGdlSentence();
 			
+			satProver.keepState(); //state has already been set at the beginning of this method.
+			satProver.keepMoves(); //moves have already been set at the beginning of this method.
 			satProver.setHypothesis(nextSentence);
 			
 			if(this.satProver.prove()){
@@ -206,6 +319,11 @@ public class SATStateMachine extends StateMachine{
 				nextTrueSentences.add(initiallyTrueSentence);
 			}
 		}
+		
+		//TODO: remove debug
+		/*if(nextTrueSentences.isEmpty()){
+			System.out.println("SATStateMachine.getNextState() check");
+		}*/
 		
 		return new MachineState(nextTrueSentences);
 		

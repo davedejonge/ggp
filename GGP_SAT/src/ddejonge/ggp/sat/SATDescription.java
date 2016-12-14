@@ -10,6 +10,7 @@ import org.ggp.base.util.gdl.grammar.GdlConstant;
 import org.ggp.base.util.gdl.grammar.GdlLiteral;
 import org.ggp.base.util.gdl.grammar.GdlNot;
 import org.ggp.base.util.gdl.grammar.GdlPool;
+import org.ggp.base.util.gdl.grammar.GdlProposition;
 import org.ggp.base.util.gdl.grammar.GdlRelation;
 import org.ggp.base.util.gdl.grammar.GdlRule;
 import org.ggp.base.util.gdl.grammar.GdlSentence;
@@ -31,7 +32,8 @@ public class SATDescription {
 	/**Stores all Proposition objects, indexed by their IDs.*/
 	PropositionStorage propositionStorage = new PropositionStorage();
 	
-	HashMap<GdlConstant, List<Proposition>> sentenceNames2propositions;
+	//e.g. maps GOAL to the list of proposition objects corresponding to grounded GOAL atoms.
+	HashMap<GdlConstant, List<Proposition>> sentenceNames2propositions = new HashMap<>();
 	
 	
 	/**List of restrictions imposed by the rules of the game.*/
@@ -248,11 +250,22 @@ public class SATDescription {
 		for(GdlRule gdlRule : groundedDescription){
 			
 			GdlConstant type = gdlRule.getHead().getName();
-			if(type.equals(GdlPool.BASE) || type.equals(GdlPool.INIT) || type.equals(GdlPool.INPUT)){
+			if(type.equals(GdlPool.BASE) || type.equals(GdlPool.INPUT)){
+				continue;
+			}
+			//do not skip INIT rules, because we need them to determine the initial state.
+			
+			Proposition head = GDL2SATConverter.toSAT(this, gdlRule.getHead());
+			
+			if(gdlRule.getBody().isEmpty()){
+				
+				//directly create a clause and add it to the gameRules.
+				Clause clause = new Clause(head, true);
+				gameRules.add(clause);
+				
 				continue;
 			}
 			
-			Proposition head = GDL2SATConverter.toSAT(this, gdlRule.getHead());
 			
 			//get all bodies already stored in the map
 			DNF dnf = head2bodies.get(head);
@@ -278,15 +291,15 @@ public class SATDescription {
 		// furthermore, ~DNF can be easily converted into CNF, and  CNF OR p can also be easily converted into CNF
 		
 		
-		for(Proposition p : head2bodies.keySet()){
+		for(Proposition head : head2bodies.keySet()){
 			
-			DNF bodies = head2bodies.get(p);
+			DNF bodies = head2bodies.get(head);
 			
 			//First handle ~p OR DNF
 			DNF dnf1 = new DNF(bodies);
 			
 			SimpleConjunction notP = new SimpleConjunction();
-			notP.addLiteral(p, false);
+			notP.addLiteral(head, false);
 			dnf1.addConjunction(notP);
 			
 			//convert dnf1 to CNF
@@ -297,8 +310,18 @@ public class SATDescription {
 			
 			//Second, handle ~DNF OR p
 			CNF cnf2 = SATUtils.negatedDnf2cnf(bodies);
-			cnf2 = SATUtils.disjunctCNFwithLiteral(cnf2, true, p);
+			cnf2 = SATUtils.disjunctCNFwithLiteral(cnf2, true, head);
 			gameRules.addAll(cnf2);
+			
+			//TODO: REMOVE DEBUG CODE
+			/*if(head.getGdlSentence().getName().equals(GdlPool.GOAL) && head.getGdlSentence().toString().contains("xplayer") && head.getGdlSentence().toString().contains("50")){ 
+				System.out.println(cnf1);
+				System.out.println(cnf2);
+			}*/
+			if(head.getGdlSentence().toString().contains("diagonal x")){
+				System.out.println(cnf1);
+				System.out.println(cnf2);
+			}
 		}
 	}
 	
@@ -377,6 +400,15 @@ public class SATDescription {
 					
 					this.terminal = prop;
 				}
+			
+			}else if(atom instanceof GdlProposition){
+				
+				//Create a new proposition object.
+				propositionStorage.add(atom);
+			
+			}else{
+				
+				throw new RuntimeException("SATDescription.producePropositionObjects() Error! unknown class: " + atom.getClass().getSimpleName());
 			}
 			
 			
