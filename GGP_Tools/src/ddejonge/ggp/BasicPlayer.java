@@ -37,8 +37,9 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 	//STATIC FIELDS
 	public static final int DEFAULT_PORT = 9147;
 	
-	public boolean USE_PROPNET_FOR_MULTIPLAYER_GAMES = true;
+	/*public boolean USE_PROPNET_FOR_MULTIPLAYER_GAMES = true;
 	public boolean USE_PROPNET_FOR_SINGLEPLAYER_GAMES = true;
+	*/
 	
 	//FIELDS
 	
@@ -62,9 +63,6 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 	protected Role myRole;
 	protected int myRoleIndex;
 	
-	
-	CachedStateMachine proverStateMachine = null;
-	PropnetStateMachine propnetStateMachine = null;
 	
 	//CONSTRUCTORS
 	protected BasicPlayer(boolean enableMonitor){
@@ -111,6 +109,8 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 		System.out.println("BasicPlayer.metaGame() my name is: " + this.getName());
 		System.out.println("BasicPlayer.metaGame() timeout: " + (timeout - l1));
 		
+		super.metaGame(timeout);
+		
 		//let's see if this works:
 		GamerLogger.startFileLogging(getMatch(), this.getName());
 		
@@ -119,47 +119,11 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 		//  I have removed the 'final' keyword, and added the method newMetaGame();
 		//  Also, I have changed the field stateMahchine from private to protected.
 		
-		this.proverStateMachine = new CachedStateMachine(new MyProverStateMachine());
-		this.proverStateMachine.initialize(getMatch().getGame().getRules());
-		
-		//Initially set the proverStateMachine as the default one.
-		this.stateMachine = proverStateMachine;
-		
-		boolean usePropnet;
-		if(this.stateMachine.getRoles().size() == 1){
-			usePropnet = this.USE_PROPNET_FOR_SINGLEPLAYER_GAMES;
-		}else{
-			usePropnet = this.USE_PROPNET_FOR_MULTIPLAYER_GAMES;
-		}
 		
 		System.out.println("BasicPlayer.metaGame() number of players: " + this.stateMachine.getRoles().size());
 		System.out.println();
 		
-		if(usePropnet){
-			
-			//Try to initialize the PropnetStateMachine and set it as the default StateMachine, if successful.		
-			try{
-				
-				System.out.println("BasicPlayer.metaGame() Initializing Propnet...");
-				
-				this.propnetStateMachine = new PropnetStateMachine();
-				this.propnetStateMachine.initialize(getMatch().getGame().getRules());
-			
-				this.stateMachine = propnetStateMachine;
-				
-				System.out.println("BasicPlayer.metaGame() Initializing Propnet finished successfully!");
-				
-			}catch(Throwable throwable){
-				
-				throwable.printStackTrace();
-				
-				System.out.println("BasicPlayer.metaGame() ERROR! USING PROVER_STATE_MACHINE instead of PropnetStateMachine");
-				this.propnetStateMachine = null;
-			}
-		}
 		
-		long l2 = System.currentTimeMillis();
-		this.monitor.println("BasicPlayer.metaGame() initializing statemachines finished in " + (l2-l1) + " ms.");	
 		
 		newMetaGame(timeout);
 		
@@ -266,10 +230,6 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 		return getClass().getSimpleName();
 	}
 
-	@Override
-	public StateMachine getInitialStateMachine() {
-		return this.stateMachine;
-	}
 	
 	// This is the default Sample Panel
 	@Override
@@ -368,8 +328,5 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 
 	}
 	
-	public CachedStateMachine getProverStateMachine(){
-		return this.proverStateMachine;
-	}
 
 }
