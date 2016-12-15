@@ -49,6 +49,7 @@ public class SATDescription {
 	List<Clause> nonProduceableRestrictions;
 	
 	List<Clause> allRulesAndRestrictions;
+	List<Clause> generalRulesAndRestrictions;
 	
 	List<Role> roles = new ArrayList<>();
 	
@@ -111,12 +112,17 @@ public class SATDescription {
 		initGameRules(groundedDescription);
 		
 		
-		allRulesAndRestrictions = new ArrayList<>();
-		allRulesAndRestrictions.addAll(gameRules);
-		allRulesAndRestrictions.addAll(legalRestrictions);
-		allRulesAndRestrictions.addAll(actionRestrictions);
-		allRulesAndRestrictions.addAll(nonProduceableRestrictions);
+		ArrayList<Clause> _generalRulesAndRestrictions = new ArrayList<>();
+		_generalRulesAndRestrictions.addAll(gameRules);
+		_generalRulesAndRestrictions.addAll(nonProduceableRestrictions);
+		generalRulesAndRestrictions = Collections.unmodifiableList(_generalRulesAndRestrictions);
 		
+		ArrayList<Clause> _allRulesAndRestrictions = new ArrayList<>();
+		_allRulesAndRestrictions.addAll(gameRules);
+		_allRulesAndRestrictions.addAll(legalRestrictions);
+		_allRulesAndRestrictions.addAll(actionRestrictions);
+		_allRulesAndRestrictions.addAll(nonProduceableRestrictions);
+		allRulesAndRestrictions = Collections.unmodifiableList(_allRulesAndRestrictions);
 	}
 	
 	
@@ -459,8 +465,18 @@ public class SATDescription {
 	 * @return
 	 */
 	public List<Clause> getAllRulesAndRestrictions(){
-		return Collections.unmodifiableList(allRulesAndRestrictions);
+		return allRulesAndRestrictions;
 	}
+	
+	/**
+	 * Returns a list of clauses that represent the rules of the game, but not the restrictions regarding to the legality of moves
+	 * or the restriction that each player must make exactly one move.
+	 * @return
+	 */
+	public List<Clause> getGeneralRulesAndRestrictions(){
+		return generalRulesAndRestrictions;
+	}
+	
 	
 	public int getNumPropositions(){
 		return this.propositionStorage.size();

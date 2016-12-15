@@ -35,6 +35,7 @@ import ddejonge.ggp.sat.logic.SATFormula;
 import ddejonge.ggp.sat.logic.SimpleConjunction;
 import ddejonge.ggp.sat.logic.XOR;
 import ddejonge.ggp.tools.dataStructures.ArraySet;
+import ddejonge.ggp.tools.dataStructures.UnionCollection;
 
 public class SATProver {
 
@@ -57,7 +58,7 @@ public class SATProver {
 	
 	
 	//These are the hypothesis, the state, and the moves, translated to Clauses:
-	private Clause hypothesisAsClause; //represents the NEGATION of the hypothesis.
+	private List<Clause> negatedHypothesisAsClauseList = new ArrayList<>(1); //a singleton list that represents the NEGATION of the hypothesis.
 	private List<Clause> stateAsClauses = new ArrayList<>();
 	private List<Clause> movesAsClauses = new ArrayList<>();
 	
@@ -195,7 +196,10 @@ public class SATProver {
 		
 		this.hypothesis = hypothesis;
 		Proposition prop = GDL2SATConverter.toSAT(this.satDescription, hypothesis);
-		this.hypothesisAsClause = new Clause(prop, false);
+		Clause negatedHypothesis = new Clause(prop, false);
+		
+		this.negatedHypothesisAsClauseList.clear();
+		this.negatedHypothesisAsClauseList.add(negatedHypothesis);
 	}
 	
 	
@@ -205,12 +209,11 @@ public class SATProver {
 		setHypothesis(hypothesis);
 		
 		//Collect the rules of the game as clauses.
-		ArrayList<Clause> allClauses = new ArrayList<>();
-		allClauses.addAll(satDescription.gameRules);
-		allClauses.addAll(satDescription.nonProduceableRestrictions);
+		Collection<Clause> allClauses = new UnionCollection<Clause>();
+		allClauses.addAll(satDescription.getGeneralRulesAndRestrictions());
 		
 		//Add the hypothesis as clause.
-		allClauses.add(hypothesisAsClause);
+		allClauses.addAll(negatedHypothesisAsClauseList);
 		
 		//Now check if the list of clauses is satisfiable.
 		Boolean isSatisfiable = isSatisfiable(allClauses, satDescription.propositionStorage.size());
@@ -232,18 +235,12 @@ public class SATProver {
 		setHypothesis(hypothesis);
 		
 		//Collect the rules of the game as clauses.
-		ArrayList<Clause> allClauses = new ArrayList<>();
-		allClauses.addAll(satDescription.gameRules);
-		allClauses.addAll(satDescription.nonProduceableRestrictions);
-		
-		//action restrictions and legal restrictions are not relevant for state properties.
-		/*allClauses.addAll(satDescription.legalRestrictions); 
-		  allClauses.addAll(satDescription.actionRestrictions);*/
+		Collection<Clause> allClauses = new UnionCollection<Clause>();
+		allClauses.addAll(satDescription.getGeneralRulesAndRestrictions());
 		
 		//Add the state and the hypothesis as clauses.
 		allClauses.addAll(stateAsClauses);
-		allClauses.add(hypothesisAsClause);
-		/*allClauses.addAll(movesAsClauses);*/
+		allClauses.addAll(negatedHypothesisAsClauseList);
 		
 		//Now check if the list of clauses is satisfiable.
 		Boolean isSatisfiable = isSatisfiable(allClauses, satDescription.propositionStorage.size());
@@ -267,15 +264,12 @@ public class SATProver {
 		setHypothesis(hypothesis);
 		
 		//Collect the rules of the game as clauses.
-		ArrayList<Clause> allClauses = new ArrayList<>();
-		allClauses.addAll(satDescription.gameRules);
-		allClauses.addAll(satDescription.nonProduceableRestrictions);
-		allClauses.addAll(satDescription.legalRestrictions); 
-		allClauses.addAll(satDescription.actionRestrictions);
+		Collection<Clause> allClauses = new UnionCollection<Clause>();
+		allClauses.addAll(satDescription.getAllRulesAndRestrictions());
 		
 		//Add the state and the hypothesis as clauses.
 		allClauses.addAll(stateAsClauses);
-		allClauses.add(hypothesisAsClause);
+		allClauses.addAll(negatedHypothesisAsClauseList);
 		allClauses.addAll(movesAsClauses);
 		
 		//Now check if the list of clauses is satisfiable.
@@ -288,24 +282,6 @@ public class SATProver {
 		return !isSatisfiable;
 	}
 	
-	
-	
-	/**
-	 * Tests whether the given list of clauses is satisfiable in combination with the SATDescription of this prover.
-	 * @param clauses
-	 * @return
-	 */
-	/*public Boolean isSatisfiable(List<Clause> clauses){
-		
-		ArrayList<Clause> allClauses = new ArrayList<>();
-		allClauses.addAll(satDescription.gameRules);
-		allClauses.addAll(satDescription.legalRestrictions);
-		allClauses.addAll(satDescription.actionRestrictions);
-		allClauses.addAll(satDescription.nonProduceableRestrictions);
-		allClauses.addAll(clauses);
-		
-		return isSatisfiable(allClauses, satDescription.propositionStorage.size());
-	}*/
 	
 	/**
 	 * Returns null if it fails to either prove or disprove satisfiability.

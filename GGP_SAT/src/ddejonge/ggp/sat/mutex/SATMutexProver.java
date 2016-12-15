@@ -24,7 +24,7 @@ import ddejonge.ggp.sat.logic.DNF;
 import ddejonge.ggp.sat.logic.Proposition;
 import ddejonge.ggp.sat.logic.SimpleConjunction;
 import ddejonge.ggp.sat.logic.XOR;
-import ddejonge.ggp.tools.dataStructures.UnionList;
+import ddejonge.ggp.tools.dataStructures.UnionCollection;
 
 public class SATMutexProver implements MutexProver{
 
@@ -75,7 +75,7 @@ public class SATMutexProver implements MutexProver{
 		DNF nextRoundDNF = getMutexDNF(candidateMutex, true);
 		CNF nextRoundCNF = SATUtils.negatedDnf2cnf(nextRoundDNF);
 		
-		UnionList<Clause> clausesToProve = new UnionList<>();
+		UnionCollection<Clause> clausesToProve = new UnionCollection<>();
 		clausesToProve.addAll(knownMutexRules);
 		clausesToProve.addAll(currentRoundCNF);
 		clausesToProve.addAll(nextRoundCNF);
