@@ -38,7 +38,16 @@ import ddejonge.ggp.tools.dataStructures.ArraySet;
 import ddejonge.ggp.tools.dataStructures.UnionCollection;
 
 public class SATProver {
-
+	
+	
+	//Possible improvements:
+	// - in isSatisfiable() we are creating a new Solver everytime and copying all the clauses to that solver.
+	//   maybe this can be done more efficiently.
+	// - addToClauses(List<Move> moves, List<Clause> clauses) can be highly optimized.
+	// - maybe addToClauses(MachineState state, List<Clause> clauses) as well.
+	
+	
+	
 	//STATIC FIELDS
 
 	//FIELDS
@@ -62,6 +71,9 @@ public class SATProver {
 	private List<Clause> stateAsClauses = new ArrayList<>();
 	private List<Clause> movesAsClauses = new ArrayList<>();
 	
+	
+	//The collection of clauses to feed to the prover.
+	private Collection<Clause> clausesToProve = new UnionCollection<>();
 	
 	//CONSTRUCTORS
 	public SATProver(List<GdlRule> groundedDescription, List<GdlSentence> groundedBasePropositions, List<GdlSentence> groundedDoesPropositions, List<Role> roles){
@@ -133,23 +145,17 @@ public class SATProver {
 	}
 	
 	
-	private void addToClauses(GdlSentence hypothesis, List<Clause> clauses){
-		Proposition hyp = GDL2SATConverter.toSAT(satDescription, hypothesis);
-		Clause clause = new Clause(hyp, false);
-		clauses.add(clause);
-	}
-	
 	
 	private void setState(MachineState state){
 		
-		//if both the given state, and the previous state are null, then something is wrong.
-		if(state == null && this.state == null){
-			throw new RuntimeException("SATProver.proveStateProperty() Error! state is not given!");
-		}
-		
-		//If the given state is null, or if the given state is equal to the previous state, then we don't need
-		//to update the state.
-		if(state == null || state.equals(this.state)){
+		//If the given state is null then we use the previously set state.
+		if(state == null){
+			
+			//if both the given state, and the previous state are null, then something is wrong.
+			if(this.state == null){
+				throw new RuntimeException("SATProver.proveStateProperty() Error! state is not given!");
+			}
+			
 			return;
 		}
 		
@@ -161,16 +167,15 @@ public class SATProver {
 	
 	void setMoves(List<Move> moves){
 		
-		if(moves == null && (this.moves == null || this.moves.isEmpty())){
-			throw new RuntimeException("SATProver.setMoves() Error! moves are not given!");
-		}
-		
 		//If the given moves are null, then use the moves that were already set.
 		if(moves == null){
+			
+			if(this.moves == null || this.moves.isEmpty()){
+				throw new RuntimeException("SATProver.setMoves() Error! moves are not given!");
+			}
+			
 			return;
 		}
-		
-		//TODO: test if given moves are equal to previous moves? note however that JointMove.equals() isn't implemented.
 		
 		this.moves.clear();
 		this.moves.addAll(moves);
@@ -209,14 +214,14 @@ public class SATProver {
 		setHypothesis(hypothesis);
 		
 		//Collect the rules of the game as clauses.
-		Collection<Clause> allClauses = new UnionCollection<Clause>();
-		allClauses.addAll(satDescription.getGeneralRulesAndRestrictions());
+		clausesToProve.clear();
+		clausesToProve.addAll(satDescription.getGeneralRulesAndRestrictions());
 		
 		//Add the hypothesis as clause.
-		allClauses.addAll(negatedHypothesisAsClauseList);
+		clausesToProve.addAll(negatedHypothesisAsClauseList);
 		
 		//Now check if the list of clauses is satisfiable.
-		Boolean isSatisfiable = isSatisfiable(allClauses, satDescription.propositionStorage.size());
+		Boolean isSatisfiable = isSatisfiable(clausesToProve, satDescription.propositionStorage.size());
 		
 		if(isSatisfiable == null){
 			return null;
@@ -235,15 +240,15 @@ public class SATProver {
 		setHypothesis(hypothesis);
 		
 		//Collect the rules of the game as clauses.
-		Collection<Clause> allClauses = new UnionCollection<Clause>();
-		allClauses.addAll(satDescription.getGeneralRulesAndRestrictions());
+		clausesToProve.clear();
+		clausesToProve.addAll(satDescription.getGeneralRulesAndRestrictions());
 		
 		//Add the state and the hypothesis as clauses.
-		allClauses.addAll(stateAsClauses);
-		allClauses.addAll(negatedHypothesisAsClauseList);
+		clausesToProve.addAll(stateAsClauses);
+		clausesToProve.addAll(negatedHypothesisAsClauseList);
 		
 		//Now check if the list of clauses is satisfiable.
-		Boolean isSatisfiable = isSatisfiable(allClauses, satDescription.propositionStorage.size());
+		Boolean isSatisfiable = isSatisfiable(clausesToProve, satDescription.propositionStorage.size());
 		
 		if(isSatisfiable == null){
 			return null;
@@ -264,16 +269,16 @@ public class SATProver {
 		setHypothesis(hypothesis);
 		
 		//Collect the rules of the game as clauses.
-		Collection<Clause> allClauses = new UnionCollection<Clause>();
-		allClauses.addAll(satDescription.getAllRulesAndRestrictions());
+		clausesToProve.clear();
+		clausesToProve.addAll(satDescription.getAllRulesAndRestrictions());
 		
 		//Add the state and the hypothesis as clauses.
-		allClauses.addAll(stateAsClauses);
-		allClauses.addAll(negatedHypothesisAsClauseList);
-		allClauses.addAll(movesAsClauses);
+		clausesToProve.addAll(stateAsClauses);
+		clausesToProve.addAll(negatedHypothesisAsClauseList);
+		clausesToProve.addAll(movesAsClauses);
 		
 		//Now check if the list of clauses is satisfiable.
-		Boolean isSatisfiable = isSatisfiable(allClauses, satDescription.propositionStorage.size());
+		Boolean isSatisfiable = isSatisfiable(clausesToProve, satDescription.propositionStorage.size());
 		
 		if(isSatisfiable == null){
 			return null;

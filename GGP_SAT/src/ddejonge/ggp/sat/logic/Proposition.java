@@ -1,6 +1,5 @@
 package ddejonge.ggp.sat.logic;
 
-import org.ggp.base.util.gdl.grammar.GdlProposition;
 import org.ggp.base.util.gdl.grammar.GdlSentence;
 import org.sat4j.core.VecInt;
 
