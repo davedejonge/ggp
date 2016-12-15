@@ -64,7 +64,8 @@ public class Graph<V extends Vertex, E extends Edge>{
 				
 				Edge linkToParent = vertex.getIncomingEdges().get(i);
 				Vertex parent = linkToParent.getFrom();
-				parent.getOutgoingEdges().remove(linkToParent);
+				parent.removeOutgoingEdge(linkToParent);
+				//parent.getOutgoingEdges().remove(linkToParent);
 				
 				linkToParent.cleanUp_private();
 			}
