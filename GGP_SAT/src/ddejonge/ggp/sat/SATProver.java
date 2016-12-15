@@ -41,7 +41,7 @@ public class SATProver {
 	
 	
 	//Possible improvements:
-	// - in isSatisfiable() we are creating a new Solver everytime and copying all the clauses to that solver.
+	// - in isSatisfiable() we are creating a new Solver every time and copying all the clauses to that solver.
 	//   maybe this can be done more efficiently.
 	// - addToClauses(List<Move> moves, List<Clause> clauses) can be highly optimized.
 	// - maybe addToClauses(MachineState state, List<Clause> clauses) as well.
