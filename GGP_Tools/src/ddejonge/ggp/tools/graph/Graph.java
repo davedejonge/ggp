@@ -55,17 +55,12 @@ public class Graph<V extends Vertex, E extends Edge>{
 	
 	public void removeVertex(V vertex){
 		
-		/*vertices.remove(vertex);
-		edges.removeAll(vertex.getIncomingEdges());
-		edges.removeAll(vertex.getOutgoingEdges());*/
-		
 		if(vertex.getIncomingEdges() != null){
 			for(int i=0; i<vertex.getIncomingEdges().size(); i++){
 				
 				Edge linkToParent = vertex.getIncomingEdges().get(i);
 				Vertex parent = linkToParent.getFrom();
 				parent.removeOutgoingEdge(linkToParent);
-				//parent.getOutgoingEdges().remove(linkToParent);
 				
 				linkToParent.cleanUp_private();
 			}
@@ -76,7 +71,6 @@ public class Graph<V extends Vertex, E extends Edge>{
 				
 				Edge linkToChild = vertex.getOutgoingEdges().get(i);
 				Vertex child = linkToChild.getTo();
-				/*child.getIncomingEdges().remove(linkToChild);*/
 				child.removeIncomingEdge(linkToChild);
 				
 				linkToChild.cleanUp_private();
