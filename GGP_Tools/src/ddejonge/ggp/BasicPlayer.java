@@ -126,8 +126,6 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 		
 		
 		newMetaGame(timeout);
-		
-		
 
 	}
 	

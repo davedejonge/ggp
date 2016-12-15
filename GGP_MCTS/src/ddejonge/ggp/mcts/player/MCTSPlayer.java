@@ -66,7 +66,7 @@ public class MCTSPlayer extends BasicPlayer {
 	//CONSTRUCTOR
 	MCTSPlayer(MCTSParams params, String name){
 		
-		this.monitor.setProperty("Nodes generated:");
+		this.monitor.setProperty("StateNodes generated:");
 		this.monitor.setProperty("Edges generated:");
 		
 		this.params = params;

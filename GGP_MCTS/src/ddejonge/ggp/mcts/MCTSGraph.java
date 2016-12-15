@@ -79,6 +79,9 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 	//  and only if this is not the case then we add the new node to the graph.
 	private int numNodesInTree;
 	
+	
+	private int numStateNodesInTree = 0;
+	
 	ArrayList<Rollout> collectedRollouts;
 	
 	
@@ -167,6 +170,7 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 		if(loopNode == null){
 			boolean isTerminal = stateMachine.isTerminal(state);
 			newRoot = new StateNode(state, isTerminal);
+			numStateNodesInTree++;
 			depth2nodesAtDepth.add(root.getDepth() + numPlayers, newRoot);
 		}else{
 			newRoot = (StateNode)loopNode; //if loopNode is not a StateNode then something went wrong.
@@ -187,6 +191,7 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 		if(root == null){
 			boolean isTerminal = stateMachine.isTerminal(rootState);
 			root = new StateNode(rootState, isTerminal);
+			numStateNodesInTree++;
 			depth2nodesAtDepth.add(0, root);
 		}else{
 			throw new NotImplementedException();
@@ -411,6 +416,7 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 						// (otherwise we are just adding a new edge between two existing nodes)
 						if(child == newNode){
 							depth2nodesAtDepth.add(leaf.getDepth() + 1, child);
+							numStateNodesInTree++;
 						}
 						
 						
@@ -442,7 +448,7 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 				lastUpdate = currentTime;
 				if(monitor != null){
 					monitor.setValue("Time:", timeout - currentTime, false);
-					monitor.setValue("Nodes generated:", numNodesInTree, false);
+					monitor.setValue("StateNodes generated:", numStateNodesInTree, false);
 					monitor.setValue("Edges generated:", MCTSEdge.edgesGenerated, true);
 				}
 			}
