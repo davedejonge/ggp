@@ -2,19 +2,20 @@ package ddejonge.ggp.tools.dataStructures;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 
 /**
- * This list allows you to put the elements of a number of lists together in one list, without having to copy all these elements.
+ * This collection allows you to put the elements of a number of collections together in one collection, without having to copy all their elements.
  * 
  * @author Dave de Jonge, Western Sydney University
  *
  * @param <T>
  */
-public class UnionList<T> implements Collection<T>{
+public class UnionCollection<T> implements Collection<T>{
 	//This class implements Collection rather than just Iterable, because we may want to pass it to a function
 	// that expects a collection, because it makes a call to addAll().
 
@@ -24,7 +25,7 @@ public class UnionList<T> implements Collection<T>{
 	
 	@Override
 	public boolean add(T e) {
-		throw new UnsupportedOperationException();
+		return listOfCollections.add(Collections.singleton(e));
 	}
 
 
@@ -51,6 +52,10 @@ public class UnionList<T> implements Collection<T>{
 		return false;
 	}
 
+	
+	/**
+	 * THIS METHOD IS NOT SUPPORTED!
+	 */
 	@Override
 	public boolean containsAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
@@ -116,18 +121,25 @@ public class UnionList<T> implements Collection<T>{
 		
 	}
 
-
+	/**
+	 * THIS METHOD IS NOT SUPPORTED!
+	 */
 	@Override
 	public boolean remove(Object o) {
 		throw new UnsupportedOperationException();
 	}
 
-
+	/**
+	 * THIS METHOD IS NOT SUPPORTED!
+	 */
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * THIS METHOD IS NOT SUPPORTED!
+	 */
 	@Override
 	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
@@ -148,12 +160,17 @@ public class UnionList<T> implements Collection<T>{
 		return size;
 	}
 
-
+	/**
+	 * THIS METHOD IS NOT SUPPORTED!
+	 */
 	@Override
 	public Object[] toArray() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * THIS METHOD IS NOT SUPPORTED!
+	 */
 	@Override
 	public <T> T[] toArray(T[] a) {
 		throw new UnsupportedOperationException();

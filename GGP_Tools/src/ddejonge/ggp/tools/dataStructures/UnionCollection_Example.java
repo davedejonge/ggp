@@ -2,7 +2,7 @@ package ddejonge.ggp.tools.dataStructures;
 
 import java.util.ArrayList;
 
-public class UnionList_Example {
+public class UnionCollection_Example {
 
 	public static void main(String[] args) {
 		
@@ -22,7 +22,7 @@ public class UnionList_Example {
 		list3.add("I");
 		
 		
-		UnionList<String> unionList = new UnionList<>();
+		UnionCollection<String> unionList = new UnionCollection<>();
 		unionList.addAll(list1);
 		unionList.addAll(list2);
 		unionList.addAll(list3);
