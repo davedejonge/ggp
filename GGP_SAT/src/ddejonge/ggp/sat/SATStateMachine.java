@@ -20,6 +20,7 @@ import org.sat4j.reader.GroupedCNFReader;
 import ddejonge.ggp.sat.logic.Proposition;
 import ddejonge.ggp.tools.NotImplementedException;
 import ddejonge.ggp.tools.dataStructures.ArraySet;
+import ddejonge.ggp.tools.dataStructures.Pair;
 import ddejonge.ggp.tools.logic.LogicUtils;
 
 public class SATStateMachine extends StateMachine{
@@ -33,7 +34,13 @@ public class SATStateMachine extends StateMachine{
 	List<Role> roles;	
 	
 	MachineState initialState = null;
-	HashMap<String, GdlRelation[]> roles2goalPropositions = new HashMap<String, GdlRelation[]>();
+	/*HashMap<String, GdlRelation[]> roles2goalPropositions = new HashMap<String, GdlRelation[]>();*/
+	
+	/**
+	 * Maps each role to a list of GOAL propositions. Each GOAL proposition is represented by a pair, consisting
+	 * of the GDLRelation and the goal value.
+	 */
+	HashMap<String, List<Pair<GdlRelation, Integer>>> roles2goalPropositions = new HashMap<>();
 	
 	MachineState currentState;
 	
@@ -63,9 +70,9 @@ public class SATStateMachine extends StateMachine{
 		
 		Set<GdlSentence> allAtoms = SATUtils.extractAtoms(flatDescription);
 
-		for(Role role : roles){
+		/*for(Role role : roles){
 			roles2goalPropositions.put(role.toString(), new GdlRelation[101]);
-		}
+		}*/
 		
 		//Fill the arrays with goal propositions.
 		for (GdlSentence gdlSentence : allAtoms) {
@@ -74,12 +81,20 @@ public class SATStateMachine extends StateMachine{
 				GdlConstant roleConstant = (GdlConstant)gdlSentence.get(0);
 				String roleName = roleConstant.toString();
 				
-				GdlRelation[] array = roles2goalPropositions.get(roleName);
+				List<Pair<GdlRelation, Integer>> goalPropsOfRole = roles2goalPropositions.get(roleName);
+				if(goalPropsOfRole == null){
+					goalPropsOfRole = new ArrayList<>();
+					roles2goalPropositions.put(roleName, goalPropsOfRole);
+				}
+				
+				/*GdlRelation[] array = roles2goalPropositions.get(roleName);*/
 				
 				GdlConstant goalConstant = (GdlConstant) gdlSentence.get(1);
 				int goal = Integer.parseInt(goalConstant.toString());
 				
-				array[goal] = (GdlRelation) gdlSentence;
+				goalPropsOfRole.add(new Pair<GdlRelation, Integer>((GdlRelation)gdlSentence, goal));
+				
+				/*array[goal] = (GdlRelation) gdlSentence;*/
 			}
 		}
 
@@ -94,9 +109,30 @@ public class SATStateMachine extends StateMachine{
 	@Override
 	public int getGoal(MachineState state, Role role) throws GoalDefinitionException {
 		
-		GdlSentence[] goalPropositions = roles2goalPropositions.get(role.toString());
+		/*GdlSentence[] goalPropositions = roles2goalPropositions.get(role.toString());*/
+		List<Pair<GdlRelation, Integer>> goalPropsOfRole = roles2goalPropositions.get(role.toString());
 		
 		int goalValue = -1;
+		for(Pair<GdlRelation, Integer> goalPair : goalPropsOfRole){
+			GdlRelation goalProp = goalPair.getLeft();
+			
+			Boolean result = satProver.proveStateProperty(state, goalProp);
+			
+			if(result != null && result){
+				
+				if(goalValue == -1){
+					goalValue = goalPair.getRight();
+				}else{
+					//If the goal value had already been set before, then it means there are 2 different goal values for this state.
+					System.out.println("Previous goal value: " + goalValue);
+					System.out.println("New goal value: " + goalPair.getRight());
+					throw new GoalDefinitionException(state, role);
+				}
+			}
+		}
+		
+		
+		/*
 		for(int i=0; i<=100; i++){
 			
 			if(goalPropositions[i] == null){
@@ -116,7 +152,7 @@ public class SATStateMachine extends StateMachine{
 					throw new GoalDefinitionException(state, role);
 				}
 			}
-		}
+		}*/
 		
 		if(goalValue == -1){
 			throw new GoalDefinitionException(state, role);
