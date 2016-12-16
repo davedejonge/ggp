@@ -348,6 +348,10 @@ public class SATDescription {
 		return conjunction;
 	}
 	
+	/**
+	 * Extracts all ground atoms from the grounded game description and converts them into Proposition objects.
+	 * @param groundedDescription
+	 */
 	private void producePropositionObjects(List<GdlRule> groundedDescription){
 		
 		//1.Extract all atoms from the description.
@@ -458,24 +462,26 @@ public class SATDescription {
 	//METHODS
 
 	//GETTERS AND SETTERS
+	/**
+	 * Returns a list of clauses that represent the rules of the game, but not the restrictions regarding to the legality of moves
+	 * or the restriction that each player must make exactly one move. 
+	 * @return
+	 */
+	public List<Clause> getGeneralRulesAndRestrictions(){
+		return generalRulesAndRestrictions;
+	}
 	
 	/**
 	 * Returns a list of clauses that represent the rules of the game, together with a number of rules
 	 * that hold for all games that are defined in GDL (e.g. every player must make exactly one move in every round).
+	 * These are necessary for inductive proofs.
 	 * @return
 	 */
 	public List<Clause> getAllRulesAndRestrictions(){
 		return allRulesAndRestrictions;
 	}
 	
-	/**
-	 * Returns a list of clauses that represent the rules of the game, but not the restrictions regarding to the legality of moves
-	 * or the restriction that each player must make exactly one move.
-	 * @return
-	 */
-	public List<Clause> getGeneralRulesAndRestrictions(){
-		return generalRulesAndRestrictions;
-	}
+
 	
 	
 	public int getNumPropositions(){

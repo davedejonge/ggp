@@ -270,7 +270,7 @@ public class SATProver {
 		
 		//Collect the rules of the game as clauses.
 		clausesToProve.clear();
-		clausesToProve.addAll(satDescription.getAllRulesAndRestrictions());
+		clausesToProve.addAll(satDescription.getGeneralRulesAndRestrictions()); //Note: we don't need legal restrictions or action restrictions, because we may assume they are satisfied by the given moves.
 		
 		//Add the state and the hypothesis as clauses.
 		clausesToProve.addAll(stateAsClauses);

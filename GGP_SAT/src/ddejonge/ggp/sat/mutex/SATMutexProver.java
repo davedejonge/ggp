@@ -1,18 +1,13 @@
 package ddejonge.ggp.sat.mutex;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-import org.ggp.base.util.gdl.grammar.Gdl;
 import org.ggp.base.util.gdl.grammar.GdlRule;
 import org.ggp.base.util.gdl.grammar.GdlSentence;
-import org.ggp.base.util.gdl.grammar.GdlVariable;
 import org.ggp.base.util.statemachine.Role;
 
 import ddejonge.ggp.prover.mutex.MutexCandidate;
-import ddejonge.ggp.prover.mutex.MutexDetector;
 import ddejonge.ggp.prover.mutex.MutexProver;
 import ddejonge.ggp.sat.GDL2SATConverter;
 import ddejonge.ggp.sat.SATDescription;
