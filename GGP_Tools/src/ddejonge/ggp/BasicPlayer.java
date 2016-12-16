@@ -102,7 +102,7 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 		
 		long l1 = System.currentTimeMillis();
 		
-		//Clear the monitor for a new game
+		//Clear the monitor for a new game. By overriding metaGame we are able to clear the console before the state machine is initialized.
 		this.monitor.clearConsole();
 		selectedMove = null;
 		
@@ -111,7 +111,6 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 		
 		super.metaGame(timeout);
 		
-		//let's see if this works:
 		GamerLogger.startFileLogging(getMatch(), this.getName());
 		
 		//NOTE: this method only works because we are extending MyStateMachineGame which is an adapted version of the StateMachineGame in the GGP Base.
@@ -123,10 +122,6 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 		System.out.println("BasicPlayer.metaGame() number of players: " + this.stateMachine.getRoles().size());
 		System.out.println();
 		
-		
-		
-		newMetaGame(timeout);
-
 	}
 	
 	

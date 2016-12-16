@@ -195,6 +195,8 @@ public abstract class MyStateMachineGamer extends Gamer
 		}
 	}
 
+	
+	/*
 	//This method is added by Dave de Jonge.
 	// I have removed the final keyword from the metaGame method above, so that it can be overridden
 	// in BasicPlayer.
@@ -218,7 +220,7 @@ public abstract class MyStateMachineGamer extends Gamer
 			throw new MetaGamingException(e);
 		}
 	}
-
+*/
 
 	/**
 	 * A wrapper function for stateMachineSelectMove. When we are asked to

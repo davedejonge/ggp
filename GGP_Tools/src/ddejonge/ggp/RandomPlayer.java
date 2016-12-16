@@ -7,6 +7,8 @@ import org.ggp.base.player.GamePlayer;
 import org.ggp.base.player.gamer.Gamer;
 import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
+import org.ggp.base.util.statemachine.StateMachine;
+import org.ggp.base.util.statemachine.implementation.prover.ProverStateMachine;
 
 import ddejonge.ggp.tools.Utils;
 
@@ -41,6 +43,11 @@ public class RandomPlayer extends BasicPlayer {
 		Move randomMove = (Move) Utils.getRandomObjectFromList(legalMoves);
 		
 		return randomMove;
+	}
+
+	@Override
+	public StateMachine getInitialStateMachine() {
+		return new ProverStateMachine();
 	}
 
 }
