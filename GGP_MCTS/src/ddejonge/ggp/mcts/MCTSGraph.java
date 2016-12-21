@@ -23,6 +23,7 @@ import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 
+import ddejonge.ggp.StatefulStateMachine;
 import ddejonge.ggp.mcts.heuristics.MoveCollectorImpl;
 import ddejonge.ggp.mcts.heuristics.mast.MastTable;
 import ddejonge.ggp.mcts.heuristics.rave.RaveCalculator;
@@ -753,7 +754,7 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 			throw new RuntimeException("MCTSGraph.rollout() Error! leaf.state == null" );
 		}
 		
-		if( ! (stateMachine instanceof PropnetStateMachine)){
+		if( ! (stateMachine instanceof StatefulStateMachine)){
 			
 			MachineState terminalState = stateMachine.performDepthCharge(leafState, new int[1]);
 			List<Integer> goalsList = stateMachine.getGoals(terminalState);
@@ -765,7 +766,7 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 			return goals;
 		}
 		
-		PropnetStateMachine propnetStateMachine = (PropnetStateMachine)this.stateMachine;
+		StatefulStateMachine propnetStateMachine = (StatefulStateMachine)this.stateMachine;
 		
 		propnetStateMachine.setState(leafState);
 		
@@ -785,8 +786,7 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 			//Create the next state.
 			try{
 				propnetStateMachine.setState(leafState);
-				propnetStateMachine.setActions(jointMove);
-				propnetStateMachine.setNextStateAsCurrentState();
+				propnetStateMachine.setNextStateAsCurrentState(jointMove);
 			
 			}catch(NullPointerException e){
 				
@@ -824,7 +824,7 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 			
 			if(legalMoves.size() == 0){
 				//TODO: remove debug
-				MachineState currentState = ((PropnetStateMachine)this.stateMachine).getCurrentState();
+				MachineState currentState = ((StatefulStateMachine)this.stateMachine).getState();
 				boolean term = this.stateMachine.isTerminal(currentState);
 				System.out.println("current state size: " + currentState.getContents().size() + " terminal: " + term);
 				
@@ -1569,23 +1569,26 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 	//METHODS THAT DEPEND ON THE TYPE OF STATEMACHINE USED
 	int[] getGoalsFromState(MachineState machineState) throws GoalDefinitionException{
 		
-		if(stateMachine instanceof PropnetStateMachine){
+		
+		List<Integer> goalsList;
+		
+		if(stateMachine instanceof StatefulStateMachine){
 			
-			((PropnetStateMachine)stateMachine).setState(machineState);
-			return ((PropnetStateMachine)stateMachine).getGoals();
+			((StatefulStateMachine)stateMachine).setState(machineState);
+			goalsList = ((StatefulStateMachine)stateMachine).getGoals();
 		
 		}else{
-			int[] goals = new int[this.numPlayers];
 			
-			List<Integer> goalsList = stateMachine.getGoals(machineState);
-			
-			for (int i = 0; i < goals.length; i++) {
-				goals[i] = goalsList.get(i);
-			}
-			
-			return goals;
+			goalsList = stateMachine.getGoals(machineState);
+
 		}
 		
+		int[] goals = new int[this.numPlayers];
+		for (int i = 0; i < goals.length; i++) {
+			goals[i] = goalsList.get(i);
+		}
+		
+		return goals;
 		
 	}
 	
@@ -1600,7 +1603,7 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 		
 		if(stateMachine instanceof PropnetStateMachine){
 			return ((PropnetStateMachine)stateMachine).getLegalMoves(roleIndex);
-		}else{
+		}else{		
 			return stateMachine.getLegalMoves(state, stateMachine.getRoles().get(roleIndex));
 		}
 	}

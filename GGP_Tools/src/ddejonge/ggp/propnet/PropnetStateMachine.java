@@ -20,13 +20,14 @@ import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 
+import ddejonge.ggp.StatefulStateMachine;
 import ddejonge.ggp.propnet.heuristics.Heuristics;
 import ddejonge.ggp.propnet.heuristics.MoveCollector;
 import ddejonge.ggp.tools.Utils;
 import ddejonge.ggp.tools.dataStructures.JointMove;
 
 
-public class PropnetStateMachine extends StateMachine{
+public class PropnetStateMachine extends StatefulStateMachine{
 
 	
 	Propnet propnet = new Propnet();
@@ -72,7 +73,7 @@ public class PropnetStateMachine extends StateMachine{
 		return getGoal(role, false);
 	}
 	
-	public int[] getGoals() throws GoalDefinitionException{
+	public int[] getGoalsAsArray() throws GoalDefinitionException{
 		
 		int[] goals = new int[this.roles.size()];
 		for (int i = 0; i < goals.length; i++) {
@@ -125,6 +126,7 @@ public class PropnetStateMachine extends StateMachine{
 		return trueGoalProp.goalValue;
 	}
 
+	
 	/**
 	 * If the given state is null, then this method returns true if and only if the current state of the propnet is terminal.
 	 */
@@ -173,7 +175,7 @@ public class PropnetStateMachine extends StateMachine{
 	 * @return
 	 * @throws MoveDefinitionException
 	 */
-	List<Move> getLegalMoves(Role role) throws MoveDefinitionException {
+	public List<Move> getLegalMoves(Role role) throws MoveDefinitionException {
 		return getLegalMoves(roles.indexOf(role));
 	}
 	
@@ -253,7 +255,7 @@ public class PropnetStateMachine extends StateMachine{
 	 * Returns the next state without actually setting it as the new state of the propnet.
 	 * @return
 	 */
-	MachineState getNextState(List<Move> moves) throws TransitionDefinitionException {
+	public MachineState getNextState(List<Move> moves) throws TransitionDefinitionException {
 		
 		//TODO: when are we supposed to throw the TransitionDefinitionException?
 		
@@ -299,7 +301,13 @@ public class PropnetStateMachine extends StateMachine{
 		this.propnet.setNextStateAsCurrentState();
 	}
 	
-	public MachineState getCurrentState(){
+	@Override
+	public void setNextStateAsCurrentState(List<Move> moves) {
+		this.setActions(moves);
+		this.setNextStateAsCurrentState();
+	}
+	
+	public MachineState getState(){
 		return new MachineState(propnet.getCurrentState());
 	}
 	
@@ -320,22 +328,20 @@ public class PropnetStateMachine extends StateMachine{
      */
     public int[] performDepthCharge(List<MachineState> states) throws GoalDefinitionException{
     	
-    	states.add(this.getCurrentState());
+    	states.add(this.getState());
     	
     	while( ! this.isTerminal()) {
     		
     		JointMove jointMove = this.getRandomJointMove((Heuristics)null);
-    		propnet.setActions(jointMove);
-    		
-        	this.setNextStateAsCurrentState();
+        	this.setNextStateAsCurrentState(jointMove);
         	
         	if(states != null){
-        		states.add(this.getCurrentState());
+        		states.add(this.getState());
         	}
 
         }
     	
-    	return this.getGoals();
+    	return this.getGoalsAsArray();
     }
     
     public int[] performDepthCharge(MoveCollector moveSelection, Heuristics heuristicsObject) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException {
@@ -344,7 +350,7 @@ public class PropnetStateMachine extends StateMachine{
         	
     		
     		if(heuristicsObject != null && heuristicsObject.appliesEarlyCutoff){
-    			MachineState currentState = this.getCurrentState();
+    			MachineState currentState = this.getState();
     			int[] goals = heuristicsObject.testEarlyCutOff(currentState, moveSelection);
     			if(goals != null){
     				return goals;
@@ -365,7 +371,7 @@ public class PropnetStateMachine extends StateMachine{
         }
     	
         /*return this.getCurrentState();*/
-		return this.getGoals();
+		return this.getGoalsAsArray();
     }
     
     
@@ -436,4 +442,15 @@ public class PropnetStateMachine extends StateMachine{
 		
 		return groundedDoesPropositions;
 	}
+
+
+
+
+
+
+
+
+
+
+
 }

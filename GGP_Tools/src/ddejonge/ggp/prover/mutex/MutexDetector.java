@@ -170,7 +170,7 @@ public class MutexDetector {
 	    		JointMove jointMove = stateMachine.getRandomJointMove((Heuristics)null);
 	    		stateMachine.setActions(jointMove);
 	    		stateMachine.setNextStateAsCurrentState();
-	    		MachineState state = stateMachine.getCurrentState();
+	    		MachineState state = stateMachine.getState();
 	    		
 	    		//Try to find and reject candidate mutexes from the current state.
 	    		numNewRejections += analyzeState(state, roleTerms, candidates);
