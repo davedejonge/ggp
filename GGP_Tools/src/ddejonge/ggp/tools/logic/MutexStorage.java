@@ -3,6 +3,7 @@ package ddejonge.ggp.tools.logic;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.ggp.base.util.gdl.grammar.GdlFunction;
 import org.ggp.base.util.gdl.grammar.GdlLiteral;
@@ -69,7 +70,7 @@ public class MutexStorage {
 	}
 	
 	
-	public static void addMutex(GdlSentence nonGroundRepresentation, List<GdlSentence> values, boolean exactlyOneMustBeTrue){
+	public static void addMutex(GdlSentence nonGroundRepresentation, Set<GdlSentence> values, boolean exactlyOneMustBeTrue){
 		
 		Mutex mutex = new Mutex(nonGroundRepresentation, values, exactlyOneMustBeTrue);
 		
