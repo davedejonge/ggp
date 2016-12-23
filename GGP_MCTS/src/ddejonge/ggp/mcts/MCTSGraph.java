@@ -191,6 +191,11 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 		
 		if(root == null){
 			boolean isTerminal = stateMachine.isTerminal(rootState);
+			
+			if(isTerminal){
+				System.out.println("MCTSGraph.expand() Root is terminal!");
+			}
+			
 			root = new StateNode(rootState, isTerminal);
 			numStateNodesInTree++;
 			depth2nodesAtDepth.add(0, root);
@@ -797,7 +802,13 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 			throw new RuntimeException("MCTSGraph.rollout() Error! unknown class: " + leaf.getClass().getSimpleName());
 		}
 		
-		return propnetRollout(moveCollector);
+		if(propnetStateMachine instanceof PropnetStateMachine){
+			return propnetRollout(moveCollector);
+		}else{
+			return statefulRollout(moveCollector);
+		}
+		
+		
 		
 	}
 	
@@ -817,7 +828,6 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 			int rIndex = playerIndex2roleIndex(pIndex);
 			
 			
-
 			
 			List<Move> legalMoves = getLegalMovesByIndex(null, rIndex);
 			
@@ -845,6 +855,27 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 				moveCollector.add(rIndex, move);
 			}
 		}
+	}
+	
+	
+	private int[] statefulRollout(MoveCollectorImpl moveSelection) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException{
+		
+		//perform rollout.
+		((StatefulStateMachine)stateMachine).performDepthCharge(null);
+		List<Integer> goalAsList = ((StatefulStateMachine)stateMachine).getGoals();
+		
+		int[] goals = new int[goalAsList.size()];
+		for (int i=0; i<goals.length; i++) {
+			goals[i] = goalAsList.get(i);
+		}
+		
+		if(moveSelection != null){
+			moveSelection.getRollOut().setGoals(goals);
+		}
+		
+		
+		this.numRollOutsPerformed++;
+		return goals;
 	}
 	
 	private int[] propnetRollout(MoveCollectorImpl moveSelection) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException{
@@ -1603,6 +1634,8 @@ public class MCTSGraph extends Graph<MCTSNode, MCTSEdge>{
 		
 		if(stateMachine instanceof PropnetStateMachine){
 			return ((PropnetStateMachine)stateMachine).getLegalMoves(roleIndex);
+		}else if(stateMachine instanceof StatefulStateMachine){
+			return ((StatefulStateMachine)stateMachine).getLegalMoves(stateMachine.getRoles().get(roleIndex));
 		}else{		
 			return stateMachine.getLegalMoves(state, stateMachine.getRoles().get(roleIndex));
 		}

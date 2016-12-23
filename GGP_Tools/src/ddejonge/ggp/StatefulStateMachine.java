@@ -72,7 +72,7 @@ public abstract class StatefulStateMachine extends StateMachine{
 	public abstract MachineState getNextState(List<Move> moves) throws TransitionDefinitionException;
 
 	
-	public abstract void setNextStateAsCurrentState(List<Move> moves);
+	public abstract void setNextStateAsCurrentState(List<Move> moves) throws TransitionDefinitionException;
 
 	
 	@Override
