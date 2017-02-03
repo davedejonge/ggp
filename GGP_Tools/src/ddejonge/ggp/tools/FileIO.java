@@ -18,6 +18,60 @@ public class FileIO {
 	//////////////////////////////////////////////////
 	//Functions to write to files	
 	//////////////////////////////////////////////////
+	public static File stringsToFile(String folderPath, String fileName, List<String> content, boolean append){
+		
+		File folder = createFolder(folderPath);
+		
+		//I'm not sure if this line is necessary. Maybe the file is already created by FileWriter.
+		File outputFile = createFile(folder, fileName);
+		
+		try {
+			
+			PrintWriter out = new PrintWriter(new FileWriter(outputFile, append));
+			for(String line : content){
+				out.println(line);
+			}
+			out.flush();
+			out.close();
+			
+			return outputFile;
+			
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	
+	
+	public static void strings2file(File file, List<String> text, boolean append){
+		
+		try {
+			
+			PrintWriter out = new PrintWriter(new FileWriter(file, append));
+			for(String line : text){
+				out.println(line);
+			}
+			out.flush();
+			out.close();
+			
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void strings2file(File file, String content, boolean append){
+		
+		ArrayList<String> contentAsList = new ArrayList<>(1);
+		contentAsList.add(content);
+		
+		strings2file(file, contentAsList, append);
+	}
+	
 	public static void appendToFile(File file, String text){
 		
 		try {
@@ -71,6 +125,16 @@ public class FileIO {
 		
 	}
 	
+	
+	public static File createFolder(String FolderPath){
+		
+		File folder = new File(FolderPath);
+		if (!folder.exists()) {
+			folder.mkdirs();
+		}
+		
+		return folder;		
+	}
 	
 	public static File createFolder(String parentFolderPath, String newFolderName){
 		
