@@ -44,8 +44,8 @@ public class GameParser {
 	
 	
 	
-	public static String getDescriptionFileName(String pathToGameFolder){
-		return getFilesFromGameFolder(pathToGameFolder).get("description");
+	public static String getGDLFileName(String pathToGameFolder){
+		return getFilesFromGameFolder(pathToGameFolder).get("rulesheet");
 	}
 	
 	
