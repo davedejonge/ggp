@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
 
 import ddejonge.ggp.tools.FileIO;
+import ddejonge.ggp.tools.GameParser;
 
 public class DownloadGames {
 	
@@ -47,7 +49,7 @@ public class DownloadGames {
 		File metaDataFile = downloadFile(gameFolder, "METADATA");
 		
 		//Parse the metaData file.
-		ArrayList<String> fileNames = parseMetaData(metaDataFile);
+		Collection<String> fileNames = GameParser.parseMetaData(metaDataFile).values();
 		
 		
 		File downloadedKifFile = null;
@@ -86,49 +88,7 @@ public class DownloadGames {
 	}
 	
 	
-	public static ArrayList<String> parseMetaData(File metaData){
-		
-		ArrayList<String> fileNames = new ArrayList<String>();
-		
-		
-		ArrayList<String> lines = FileIO.file2Strings(metaData);
-		
-		//Some METADATA files are given as a single line, while others are nicely formatted over several lines.
-		// Here, we will handle them as a single line, so if the file contains more than one line we first have to stick all
-		// lines together.
-		String stickedTogether = "";
-		for(String line : lines){
-			stickedTogether += line;
-		}
-		
-		//Remove braces.
-		stickedTogether = stickedTogether.replace("{", "");
-		stickedTogether = stickedTogether.replace("}", "");
-		
-		//The file is formatted in attribute-value pairs
-		//in the following form:   att1:val1, att2:val2, att3:val3
-		String[] pairs = stickedTogether.split(",");
-		
-		for(String pair : pairs){
-			//e.g. pair == "att1:val1"
-			
-			String[] pieces = pair.split(":");
-			if(pieces.length < 2){
-				continue;
-			}
-			
-			//remove quotes from the strings and remove whitespaces.
-			pieces[0] = pieces[0].replace("\"", "").trim();
-			pieces[1] = pieces[1].replace("\"", "").trim();
-			
-			if(pieces[0].equals("description") || pieces[0].equals("rulesheet") || pieces[0].equals("stylesheet") || pieces[0].equals("user_interface")){
-				fileNames.add(pieces[1]);
-			}
-			
-		}
-		
-		return fileNames;
-	}
+
 	
 	static File downloadFile(File gameFolder, String fileName){
 		
