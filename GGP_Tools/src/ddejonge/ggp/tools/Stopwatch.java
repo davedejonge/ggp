@@ -57,7 +57,7 @@ public class Stopwatch {
 	
 	/**
 	 * Pauses running, but does not reset the time to zero.
-	 * Calling <code>start()</code> after <code>pause()</code> causes the stopwatch to continue running from where it had been stopped.
+	 * Calling <code>start()</code> after <code>stop()</code> causes the stopwatch to continue running from where it had been stopped.
 	 * 
 	 */
 	public void stop(){

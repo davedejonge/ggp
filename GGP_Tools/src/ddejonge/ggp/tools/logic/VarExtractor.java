@@ -39,6 +39,10 @@ public class VarExtractor {
 	
 	public static void extractVariableList(GdlLiteral literal, List<GdlVariable> listToFill){
 		
+		if(literal == null){
+			throw new RuntimeException("VarExtractor.extractVariableList() Error! literal == null");
+		}
+		
 		if(literal instanceof GdlOr){
 			GdlOr or = (GdlOr) literal;
 			
