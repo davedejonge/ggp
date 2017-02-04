@@ -31,7 +31,7 @@ public class SystemInfo {
 			DROPBOX_FOLDER = dropboxFolder_z1;
 			JAVA_PROJECTS_FOLDER = DROPBOX_FOLDER + "java projects\\";
 			NEGO_GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GGP_Negotiations\\negoGames\\";
-			GAMES_FOLDER = null; //TODO: set this value.
+			GAMES_FOLDER = "C:\\Users\\Dave\\Dropbox\\java projects\\GGP\\ggp-base-master\\games\\games\\";
 			
 			EXPERIMENTS_FOLDER = "C:\\Users\\30044279\\Experiments\\";
 		
@@ -48,7 +48,8 @@ public class SystemInfo {
 		
 		}else{
 			
-			System.out.println("ERROR: working on an unknown computer");
+			
+			System.out.println("ERROR: working on an unknown computer. Please make changes to the class SystemInfo." );
 			
 			
 		}

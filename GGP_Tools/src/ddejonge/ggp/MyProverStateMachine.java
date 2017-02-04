@@ -1,5 +1,6 @@
 package ddejonge.ggp;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -7,6 +8,7 @@ import java.util.Set;
 import org.ggp.base.util.gdl.grammar.Gdl;
 import org.ggp.base.util.gdl.grammar.GdlConstant;
 import org.ggp.base.util.gdl.grammar.GdlRelation;
+import org.ggp.base.util.gdl.grammar.GdlRule;
 import org.ggp.base.util.gdl.grammar.GdlSentence;
 import org.ggp.base.util.logging.GamerLogger;
 import org.ggp.base.util.prover.Prover;
@@ -48,10 +50,50 @@ public class MyProverStateMachine extends StateMachine {
 	public void initialize(List<Gdl> description)
 	{
 		prover = new AimaProver(description);
-		roles = Role.computeRoles(description);
+		roles = computeRoles(description);
 		initialState = computeInitialState();
 	}
 
+    /**
+     * This code is adapted by Dave de Jonge, from the code in class Role.
+     * The difference is that this method also works if the roles are encoded as GdlRule objects.
+     * 
+     * Compute all of the roles in a game, in the correct order.
+     * <p>
+     * Order matters, because a joint move is defined as an ordered list
+     * of moves, in which the order determines which player took which of
+     * the moves. This function will give an ordered list in which the roles
+     * have that correct order.
+     */
+    public static List<Role> computeRoles(List<? extends Gdl> description)
+    {
+        List<Role> roles = new ArrayList<Role>();
+        for (Gdl gdl : description) {
+            
+        	GdlSentence head;
+        	
+        	if (gdl instanceof GdlRelation) {
+                
+                head = (GdlRelation) gdl;
+                
+            }else if(gdl instanceof GdlRule){
+            	
+            	GdlRule rule = (GdlRule)gdl;
+            	head = rule.getHead();
+            	
+            }else{
+            	throw new RuntimeException("MyProverStateMachine.computeRoles() Error! " + gdl.getClass().getName());
+            }
+            
+            
+            if (head.getName().getValue().equals("role")) {
+                roles.add(new Role((GdlConstant) head.get(0)));
+            }
+        }
+        return roles;
+    }
+	
+	
 	private MachineState computeInitialState()
 	{
 		Set<GdlSentence> results = prover.askAll(ProverQueryBuilder.getInitQuery(), new HashSet<GdlSentence>());

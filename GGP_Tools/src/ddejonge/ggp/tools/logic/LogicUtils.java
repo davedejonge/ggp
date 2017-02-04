@@ -1318,9 +1318,80 @@ public class LogicUtils {
 		
 	}
 	
+	
+	
+	public static GdlLiteral replaceDoesWithLegal(GdlLiteral original){
+		
+		GdlLiteral newLiteral = replaceRelationName(original, GdlPool.DOES, GdlPool.LEGAL);
+		newLiteral = replaceRelationName(original, GdlPool.getConstant("_does"), GdlPool.LEGAL);
+		
+		return newLiteral;
+	}
+	
+	
+	public static GdlLiteral replaceRelationName(GdlLiteral original, GdlConstant relationNameToRemove, GdlConstant newRelationName){
+		
+		if(original instanceof GdlNot){
+			
+			GdlLiteral body = ((GdlNot)original).getBody();
+			
+			GdlLiteral newBody = replaceRelationName(body, relationNameToRemove, newRelationName);
+			
+			if(newBody == null){
+				return null;
+			}
+			
+			return GdlPool.getNot(newBody);
+			
+		}else if(original instanceof GdlOr){
+			
+			Disjunction disjuncts = new Disjunction(((GdlOr) original).arity());
+			
+			for(int i=0; i<((GdlOr)original).arity(); i++){
+				disjuncts.add(replaceRelationName(((GdlOr) original).get(i), relationNameToRemove, newRelationName));
+			}
+			
+			return disjuncts.getOr();
+			
+		}else if(original instanceof GdlDistinct){
+			
+			//GdlDistinct can only contain terms, so nothing needs to be replaced.
+			return original; 
+			
+		}else if(original instanceof GdlSentence){
+			
+			GdlConstant relationName = ((GdlRelation) original).getName();
+			
+			
+			if(relationName.equals(relationNameToRemove)){
+				
+				GdlRelation newRelation = GdlPool.getRelation(newRelationName, ((GdlSentence) original).getBody());
+				return newRelation;
+			
+			}else{
+				
+				return original;
+			}
+			
+		}else if(original instanceof GdlAnd){
+			
+			Conjunction conjuncts = new Conjunction(((GdlAnd) original).arity());
+			
+			for(int i=0; i<((GdlAnd)original).arity(); i++){
+				conjuncts.add(replaceRelationName(((GdlAnd) original).get(i), relationNameToRemove, newRelationName));
+			}
+			
+			return conjuncts.getAnd();
+			
+		}else{
+			throw new RuntimeException("BackwardProver.replaceTrueWithNext() Error! unknown class " + original.getClass().getName());
+		}
+	}
+	
+	
 	/**
 	 * Creates a copy of the given original, but replaces every occurrence of 'true' by 'next
-	 * and removes any occurrence of 'should_do'
+	 *
 	 * @param original
 	 * @return
 	 */
