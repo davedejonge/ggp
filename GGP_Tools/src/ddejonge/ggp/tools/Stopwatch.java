@@ -56,11 +56,7 @@ public class Stopwatch {
 	}
 	
 	/**
-<<<<<<< HEAD
-	 * Pauses running, but does not reset the time to zero.
-=======
 	 * Stops the time, but does not reset the time to zero.
->>>>>>> branch 'master' of https://github.com/davedejonge/ggp.git
 	 * Calling <code>start()</code> after <code>stop()</code> causes the stopwatch to continue running from where it had been stopped.
 	 * 
 	 */
