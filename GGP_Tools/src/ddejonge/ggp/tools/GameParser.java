@@ -59,7 +59,7 @@ public class GameParser {
 	 */
 	public static HashMap<String, String> getFilesFromGameFolder(String pathToGameFolder){
 		File gameFolder = new File(pathToGameFolder);
-		return parseMetaData(gameFolder);
+		return getFilesFromGameFolder(gameFolder);
 	}
 	
 	/**
