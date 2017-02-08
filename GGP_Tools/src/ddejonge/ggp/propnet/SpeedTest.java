@@ -115,8 +115,8 @@ public class SpeedTest {
 			
 			if(stateMachine.isTerminal()){
 				
-				totalGoals += stateMachine.getGoal(roles.get(0), false);
-				totalGoals += stateMachine.getGoal(roles.get(1), false);
+				totalGoals += stateMachine.getGoal(roles.get(0));
+				totalGoals += stateMachine.getGoal(roles.get(1));
 				
 				numRollouts++;
 				

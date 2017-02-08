@@ -29,6 +29,12 @@ import ddejonge.ggp.tools.dataStructures.JointMove;
 
 public class PropnetStateMachine extends StatefulStateMachine{
 
+	 /** 
+	  * If 'checksGoalDefinition' is set to false the method getGoal() directly returns a goal value as soon as it finds one.<br/>
+	  * If 'checksGoalDefinition' is set to true it first checks that there is no other goal value and throws an
+	  * Exception if it does finds another goal value.
+	  */
+	boolean checksGoalDefinition = false;
 	
 	Propnet propnet = new Propnet();
 	List<Role> roles;	
@@ -70,33 +76,30 @@ public class PropnetStateMachine extends StatefulStateMachine{
 		if(state != null){
 			propnet.setState(state.getContents());
 		}
-		return getGoal(role, false);
+		return getGoal(role);
 	}
 	
 	public int[] getGoalsAsArray() throws GoalDefinitionException{
 		
 		int[] goals = new int[this.roles.size()];
 		for (int i = 0; i < goals.length; i++) {
-			goals[i] = getGoal(i, false);
+			goals[i] = getGoal(i);
 		}
 		
 		return goals;
 	}
 	
-	public int getGoal(Role role, boolean safely) throws GoalDefinitionException {
-		return getGoal(this.roles.indexOf(role), safely);
+	public int getGoal(Role role) throws GoalDefinitionException {
+		return getGoal(this.roles.indexOf(role));
 	}
 		
 	/**
-	 * If 'safely' is set to false it directly returns a goal value as soon as it finds one.
-	 * If 'safely' is set to true it first checks that there is no other goal value and throws an
-	 * Exception if it does finds another goal value.
+	 *
 	 * @param roleIndex
-	 * @param safely
 	 * @return
 	 * @throws GoalDefinitionException
 	 */
-	int getGoal(int roleIndex, boolean safely) throws GoalDefinitionException {	
+	int getGoal(int roleIndex) throws GoalDefinitionException {	
 		
 		List<jProposition> goalPropositionsOfRole = propnet.roleIndex2goalPropositions.get(roleIndex);
 		jProposition trueGoalProp = null;
@@ -105,7 +108,7 @@ public class PropnetStateMachine extends StatefulStateMachine{
 		for(jProposition goalProp : goalPropositionsOfRole){
 			if(goalProp.currentValue){
 				
-				if(!safely){
+				if(!this.checksGoalDefinition){
 					return goalProp.goalValue;
 				}
 				

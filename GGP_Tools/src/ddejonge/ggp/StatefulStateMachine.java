@@ -39,10 +39,9 @@ public abstract class StatefulStateMachine extends StateMachine{
 	/**
 	 * Returns the goal value of the given role, in the current state of the StateMachine.
 	 * @param role
-	 * @param checkGoalDefinition if set to false this method will simply return the first goal value it finds, without checking if there are any other goal values defined.
 	 * @return
 	 */
-	public abstract int getGoal(Role role, boolean checkGoalDefinition) throws GoalDefinitionException;
+	public abstract int getGoal(Role role) throws GoalDefinitionException;
 	
 	/**
 	 * Returns true if the current state of the StateMachine is terminal.
@@ -174,7 +173,7 @@ public abstract class StatefulStateMachine extends StateMachine{
     public List<Integer> getGoals() throws GoalDefinitionException {
         List<Integer> theGoals = new ArrayList<Integer>();
         for (Role r : getRoles()) {
-            theGoals.add(getGoal(r, false));
+            theGoals.add(getGoal(r));
         }
         return theGoals;
     }
@@ -298,7 +297,7 @@ public abstract class StatefulStateMachine extends StateMachine{
     		avgDepth[0] += depth[0];
     		final double accumulatedDiscountFactor = Math.pow(discountFactor, depth[0]);
     		for (int j = 0; j < avgScores.length; j++) {
-    			avgScores[j] += getGoal(getRoles().get(j), false) * accumulatedDiscountFactor;
+    			avgScores[j] += getGoal(getRoles().get(j)) * accumulatedDiscountFactor;
     		}
     	}
     	avgDepth[0] /= repetitions;
