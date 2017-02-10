@@ -53,6 +53,8 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 	
 //	protected StateMachine stateMachine;
 	
+	//Test.
+	
 	/**
 	 * The number of moves that have so far been made during the current game.
 	 */
