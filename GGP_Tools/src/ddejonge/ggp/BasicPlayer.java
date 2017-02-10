@@ -248,6 +248,9 @@ public abstract class BasicPlayer extends MyStateMachineGamer{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
+		
 	}
 
 	@Override
