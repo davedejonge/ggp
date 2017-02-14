@@ -12,14 +12,14 @@ import org.apache.commons.io.FileUtils;
 
 import ddejonge.ggp.tools.FileIO;
 import ddejonge.ggp.tools.GameParser;
+import ddejonge.ggp.tools.SystemInfo;
 
 public class DownloadGames {
 	
 	static final String GGP_BASE = "http://games.ggp.org/base/games/";
-	//static final String GAMES_FOLDER = "C:\\Users\\30044279\\Dropbox\\java projects\\GGP_Negotiations\\negoGames\\";
-	static final String GAMES_FOLDER = "C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\";
+	static final String GAMES_FOLDER = SystemInfo.JAVA_PROJECTS_FOLDER + "ggp-base-master\\games\\games\\";
 	
-	static final String GAME_NAME = "AIPS Rover";
+	static final String GAME_NAME = "chess";
 	
 	public static void main(String[] args) {
 		downloadGame(GAME_NAME);
