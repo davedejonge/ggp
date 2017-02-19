@@ -14,6 +14,7 @@ import ddejonge.ggp.asp.GDL2ASPConverter;
 import ddejonge.ggp.asp.dependencyGraph.DependencyGraph;
 import ddejonge.ggp.asp.dependencyGraph.DependencyGraphFactory;
 import ddejonge.ggp.tools.GameParser;
+import ddejonge.ggp.tools.SystemInfo;
 
 public class ASPPuzzleSolver {
 
@@ -26,7 +27,9 @@ public class ASPPuzzleSolver {
 		//List<Gdl> description = GameParser.file2rules("C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\knightsTour\\knightsTour.kif");
 		//List<Gdl> description = GameParser.file2rules("C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\bandl3\\bandl3_player.kif");
 		//List<Gdl> description = GameParser.file2rules("C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\sudokuGrade6H\\sudoku.kif");
-		List<Gdl> description = GameParser.file2rules("C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\8puzzle\\rulesheet.kif");
+		//List<Gdl> description = GameParser.file2rules(SystemInfo.GAMES_FOLDER + "8puzzle\\rulesheet.kif");
+		
+		List<Gdl> description =  GameParser.getRulesFromGameFolder(SystemInfo.GAMES_FOLDER + "8puzzle");
 		
 		List<Gdl> newDescription = DeORer.run(description);
 		
