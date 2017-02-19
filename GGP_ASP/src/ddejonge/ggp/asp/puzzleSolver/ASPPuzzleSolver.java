@@ -31,7 +31,7 @@ public class ASPPuzzleSolver {
 		List<Gdl> newDescription = DeORer.run(description);
 		
 		ASPPuzzleSolver solver = new ASPPuzzleSolver(newDescription);
-		solver.printAllRules();
+		//solver.printAllRules();
 		
 		System.out.println("ASPPuzzleSolver.main() searching for solution...");
 		boolean solutionFound = solver.findSolution(System.currentTimeMillis() + 30_000);
@@ -557,7 +557,7 @@ public class ASPPuzzleSolver {
 		return false;
 	}
 	
-	boolean findSolutionLimitedSteps(int maxNumActions, long timeout){
+	public boolean findSolutionLimitedSteps(int maxNumActions, long timeout){
 		
 		System.out.println("ASPPuzzleSolver.findSolutionLimitedSteps() searching for solution with maximally " + maxNumActions + " actions.");
 		
