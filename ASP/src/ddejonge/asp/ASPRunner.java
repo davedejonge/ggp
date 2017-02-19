@@ -13,6 +13,16 @@ public class ASPRunner {
 	
 	
 	//STATIC FIELDS
+	
+	/**
+	 * This is just to make sure that each temporary file has a unique file name.
+	 */
+	private static int counter;
+	
+	
+	
+	//STATIC METHODS
+	
 	public static Result findModels(String program, int numModels, boolean print, long timeout){
 	
 		ArrayList<String> list = new ArrayList<String>();
@@ -20,9 +30,7 @@ public class ASPRunner {
 		return findModels(list, numModels, print, timeout);
 		
 	}
-	
-	
-	static int counter;
+
 	
 	/**
 	 * 
@@ -55,6 +63,10 @@ public class ASPRunner {
 		
 		return result;
 	}
+	
+	
+	
+	
 	
 	
 	public static Result findOptimalModel(String program, boolean findAll, boolean print){
