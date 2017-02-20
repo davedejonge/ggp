@@ -7,6 +7,7 @@ import java.util.List;
 import org.ggp.base.util.gdl.grammar.*;
 import org.ggp.base.util.gdl.transforms.DeORer;
 import org.ggp.base.util.statemachine.Move;
+import org.ggp.base.util.statemachine.Role;
 
 import ddejonge.asp.ASPRunner;
 import ddejonge.asp.Result;
@@ -87,6 +88,15 @@ public class ASPPuzzleSolver {
 	//Note: we may use the DomainGraph instead of using this method.
 	String getRoleName(List<Gdl> description){
 		
+		List<Role> roles = Role.computeRoles(description);
+		
+		if(roles.size() > 1){
+			throw new RuntimeException("ASPPuzzleSolver.getRoleName() Error! this is not a puzzle! This is a game for " + roles.size() + " players!");
+		}
+		
+		return roles.get(0).toString();
+		
+		/*
 		for(Gdl gdl : description){
 			
 			if(gdl instanceof GdlRule){
@@ -113,7 +123,7 @@ public class ASPPuzzleSolver {
 			
 		}
 		
-		throw new RuntimeException("ASPPuzzleSolver.getRoleName() Error! Role not found!");
+		throw new RuntimeException("ASPPuzzleSolver.getRoleName() Error! Role not found!");*/
 	}
 	
 	
@@ -549,7 +559,7 @@ public class ASPPuzzleSolver {
 		allAspRules.add("#show goal/3.");*/
 		allAspRules.add("#show does/3."); //remember that does has 3 arguments, because it is temporalized.
 		
-		boolean print = false;
+		boolean print = true;
 		Result result = ASPRunner.findModels(allAspRules, 1, print, timeout);
 		
 		if(result == null || result.satisfiable == null){
