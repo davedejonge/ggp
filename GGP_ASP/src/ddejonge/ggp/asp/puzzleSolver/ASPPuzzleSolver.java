@@ -19,36 +19,6 @@ import ddejonge.ggp.tools.SystemInfo;
 public class ASPPuzzleSolver {
 
 	//STATIC FIELDS
-	
-	
-	
-	public static void main(String[] args) {
-		
-		//List<Gdl> description = GameParser.file2rules("C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\knightsTour\\knightsTour.kif");
-		//List<Gdl> description = GameParser.file2rules("C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\bandl3\\bandl3_player.kif");
-		//List<Gdl> description = GameParser.file2rules("C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\sudokuGrade6H\\sudoku.kif");
-		//List<Gdl> description = GameParser.file2rules(SystemInfo.GAMES_FOLDER + "8puzzle\\rulesheet.kif");
-		
-		List<Gdl> description =  GameParser.getRulesFromGameFolder(SystemInfo.GAMES_FOLDER + "8puzzle");
-		
-		List<Gdl> newDescription = DeORer.run(description);
-		
-		ASPPuzzleSolver solver = new ASPPuzzleSolver(newDescription);
-		//solver.printAllRules();
-		
-		System.out.println("ASPPuzzleSolver.main() searching for solution...");
-		boolean solutionFound = solver.findSolution(System.currentTimeMillis() + 30_000);
-		
-		if(solutionFound){
-			System.out.println("solution found!");
-			System.out.println(Arrays.toString(solver.solution));
-		}else{
-			System.out.println("no solution found.");
-		}
-		
-	}
-	
-	
 
 	//FIELDS
 	ArrayList<GdlConstant> gdlKeyWords;
@@ -582,7 +552,7 @@ public class ASPPuzzleSolver {
 		boolean print = false;
 		Result result = ASPRunner.findModels(allAspRules, 1, print, timeout);
 		
-		if(result == null){
+		if(result == null || result.satisfiable == null){
 			return false;
 		}
 		
