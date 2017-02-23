@@ -12,12 +12,12 @@ import ddejonge.ggp.tools.SystemInfo;
 public class ASPPuzzleSolver_Example {
 
 	//STATIC FIELDS
-	private static String PUZZLE_NAME = "8puzzle";
-	private static int SEARCH_TIME = 60_000; 			//maximum time to search for a solution, in milliseconds.
+	private static String PUZZLE_NAME = "hanoi_4_disks";
+	private static int SEARCH_TIME = 60*60*1_000; 			//maximum time to search for a solution, in milliseconds.
 	
 	// Find a solution with this maximum number of steps.
 	// Note: if you set this value very high it may take a long time to find the solution. However, if you set it too low, there simply may not be any solution.
-	private static int MAX_SOLUTION_LENGTH = 30; 		
+	private static int MAX_SOLUTION_LENGTH = 130; 		
 	
 	//STATIC METHODS
 	public static void main(String[] args) {

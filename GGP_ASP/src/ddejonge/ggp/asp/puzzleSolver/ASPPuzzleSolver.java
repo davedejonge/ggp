@@ -445,6 +445,10 @@ public class ASPPuzzleSolver {
 			}
 				
 		}
+		
+		if(moveDomainRules.size() == 0){
+			throw new RuntimeException("ASPPuzzleSolver.getMoveDomainRules() Error! no INPUT rules found in description.");
+		}
 			
 		moveDomainRules.add("move_domain(M) :- input(" + roleName +", M).");
 		
@@ -571,10 +575,6 @@ public class ASPPuzzleSolver {
 		if(result.satisfiable){
 			
 			String solutionString = result.solutions.get(0);
-			
-			
-			
-			
 			
 			System.out.println("ASPPuzzleSolver.findSolutionLimitedSteps() " + solutionString);
 			//this.solution = convertStringToSolution(solutionString);
