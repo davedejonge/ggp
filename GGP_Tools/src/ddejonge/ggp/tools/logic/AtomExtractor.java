@@ -12,6 +12,7 @@ import org.ggp.base.util.gdl.grammar.GdlOr;
 import org.ggp.base.util.gdl.grammar.GdlRule;
 import org.ggp.base.util.gdl.grammar.GdlSentence;
 
+
 public class AtomExtractor {
 
 	//STATIC FIELDS
@@ -121,3 +122,4 @@ public class AtomExtractor {
 
 	//GETTERS AND SETTERS
 }
+
