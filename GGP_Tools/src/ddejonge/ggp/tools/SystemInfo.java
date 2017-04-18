@@ -30,7 +30,7 @@ public class SystemInfo {
 			
 			DROPBOX_FOLDER = dropboxFolder_z1;
 			JAVA_PROJECTS_FOLDER = DROPBOX_FOLDER + "java projects\\";
-			NEGO_GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GGP_Negotiations\\negoGames\\";
+			NEGO_GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GGP\\GGP_Negotiations\\negoGames\\";
 			GAMES_FOLDER = "C:\\Users\\Dave\\Dropbox\\java projects\\GGP\\ggp-base-master\\games\\games\\";
 			
 			EXPERIMENTS_FOLDER = "C:\\Users\\30044279\\Experiments\\";
