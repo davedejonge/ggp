@@ -7,8 +7,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.ggp.base.util.gdl.grammar.Gdl;
 
 import ddejonge.ggp.tools.FileIO;
 import ddejonge.ggp.tools.GameParser;
@@ -17,9 +19,9 @@ import ddejonge.ggp.tools.SystemInfo;
 public class DownloadGames {
 	
 	static final String GGP_BASE = "http://games.ggp.org/base/games/";
-	static final String GAMES_FOLDER = SystemInfo.JAVA_PROJECTS_FOLDER + "ggp-base-master\\games\\games\\";
+	static final String GAMES_FOLDER = SystemInfo.JAVA_PROJECTS_FOLDER + "GGP\\ggp-base-master\\games\\games\\";
 	
-	static final String GAME_NAME = "chess";
+	static final String GAME_NAME = "queens08lg";
 	
 	public static void main(String[] args) {
 		downloadGame(GAME_NAME);
@@ -41,8 +43,11 @@ public class DownloadGames {
 	 */
 	public static File downloadGame(String gameName, String toFolder){
 		 
+		if(!toFolder.endsWith(File.separator)){
+			toFolder += File.separator;
+		}
 		
-		File gameFolder = new File(GAMES_FOLDER + gameName);
+		File gameFolder = new File(toFolder + gameName);
 		gameFolder.mkdirs();
 		
 		//First download the METADATA file.
@@ -65,20 +70,7 @@ public class DownloadGames {
 			
 		}
 		
-		
-		/*
-		for(String ext : extensions){
-			
-			String fileName;
-			if(ext.equals("")){
-				fileName = "METADATA";
-			}else{
-				fileName = GAME_NAME;
-			}
-		}
-		*/
-
-		System.out.println("DownloadGames.downloadGame() Download Finished.");	
+		System.out.println("DownloadGames.downloadGame() Download Finished at: " + gameFolder.getAbsolutePath());	
 
 		
 
@@ -105,11 +97,6 @@ public class DownloadGames {
 		
 		//Create a File object for the location where the downloaded file is going to be stored.
 		File fileToDownload = new File(gameFolder, fileName);
-		
-		/*
-		if(ext.equals(".kif")){
-			downloadedKifFile = fileToDownload;
-		}*/
 		
 		
 		//Check if the file doesn't already exists.

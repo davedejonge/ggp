@@ -21,8 +21,24 @@ import java.nio.file.Paths;
  */
 public class GameParser {
 	
-	public static List<Gdl> file2rules(String path){
-		Path p1 = Paths.get(path);
+	/**
+	 * 
+	 * @param pathToGameFolder The path the folder in which the game description file is stored. e.g. C:\games\TicTacToe.
+	 * @return
+	 */
+	public static List<Gdl> getRulesFromGameFolder(String pathToGameFolder){
+		String fileName =  getGDLFileName(pathToGameFolder);
+		
+		if(!pathToGameFolder.endsWith(File.separator)){
+			pathToGameFolder += File.separator;
+		}
+		
+		return file2rules(pathToGameFolder + fileName);
+	}
+	
+	
+	public static List<Gdl> file2rules(String pathToGameDescriptionFile){
+		Path p1 = Paths.get(pathToGameDescriptionFile);
 		
 		String fileContent = null;
 		try {
@@ -38,12 +54,19 @@ public class GameParser {
 		return fileContent2rules(fileContent);
 	}
 	
+	/**
+	 * Converts the text content of a Game Description File into GDL rules.
+	 */
 	public static List<Gdl> fileContent2rules(String fileContent){
 		return Game.createEphemeralGame(Game.preprocessRulesheet(fileContent)).getRules();
 	}
 	
 	
-	
+	/**
+	 * Given the path to the folder in which a certain game is stored, it reads the METADATA file, and extracts from it the name of the file that contains the GDL description.
+	 * @param pathToGameFolder
+	 * @return
+	 */
 	public static String getGDLFileName(String pathToGameFolder){
 		return getFilesFromGameFolder(pathToGameFolder).get("rulesheet");
 	}

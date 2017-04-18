@@ -7,6 +7,7 @@ import java.util.List;
 import org.ggp.base.util.gdl.grammar.*;
 import org.ggp.base.util.gdl.transforms.DeORer;
 import org.ggp.base.util.statemachine.Move;
+import org.ggp.base.util.statemachine.Role;
 
 import ddejonge.asp.ASPRunner;
 import ddejonge.asp.Result;
@@ -14,38 +15,11 @@ import ddejonge.ggp.asp.GDL2ASPConverter;
 import ddejonge.ggp.asp.dependencyGraph.DependencyGraph;
 import ddejonge.ggp.asp.dependencyGraph.DependencyGraphFactory;
 import ddejonge.ggp.tools.GameParser;
+import ddejonge.ggp.tools.SystemInfo;
 
 public class ASPPuzzleSolver {
 
 	//STATIC FIELDS
-	
-	
-	
-	public static void main(String[] args) {
-		
-		//List<Gdl> description = GameParser.file2rules("C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\knightsTour\\knightsTour.kif");
-		//List<Gdl> description = GameParser.file2rules("C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\bandl3\\bandl3_player.kif");
-		//List<Gdl> description = GameParser.file2rules("C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\sudokuGrade6H\\sudoku.kif");
-		List<Gdl> description = GameParser.file2rules("C:\\Users\\30044279\\Dropbox\\java projects\\ggp-base-master\\games\\games\\8puzzle\\rulesheet.kif");
-		
-		List<Gdl> newDescription = DeORer.run(description);
-		
-		ASPPuzzleSolver solver = new ASPPuzzleSolver(newDescription);
-		solver.printAllRules();
-		
-		System.out.println("ASPPuzzleSolver.main() searching for solution...");
-		boolean solutionFound = solver.findSolution(System.currentTimeMillis() + 30_000);
-		
-		if(solutionFound){
-			System.out.println("solution found!");
-			System.out.println(Arrays.toString(solver.solution));
-		}else{
-			System.out.println("no solution found.");
-		}
-		
-	}
-	
-	
 
 	//FIELDS
 	ArrayList<GdlConstant> gdlKeyWords;
@@ -114,6 +88,15 @@ public class ASPPuzzleSolver {
 	//Note: we may use the DomainGraph instead of using this method.
 	String getRoleName(List<Gdl> description){
 		
+		List<Role> roles = Role.computeRoles(description);
+		
+		if(roles.size() > 1){
+			throw new RuntimeException("ASPPuzzleSolver.getRoleName() Error! this is not a puzzle! This is a game for " + roles.size() + " players!");
+		}
+		
+		return roles.get(0).toString();
+		
+		/*
 		for(Gdl gdl : description){
 			
 			if(gdl instanceof GdlRule){
@@ -140,7 +123,7 @@ public class ASPPuzzleSolver {
 			
 		}
 		
-		throw new RuntimeException("ASPPuzzleSolver.getRoleName() Error! Role not found!");
+		throw new RuntimeException("ASPPuzzleSolver.getRoleName() Error! Role not found!");*/
 	}
 	
 	
@@ -462,6 +445,10 @@ public class ASPPuzzleSolver {
 			}
 				
 		}
+		
+		if(moveDomainRules.size() == 0){
+			throw new RuntimeException("ASPPuzzleSolver.getMoveDomainRules() Error! no INPUT rules found in description.");
+		}
 			
 		moveDomainRules.add("move_domain(M) :- input(" + roleName +", M).");
 		
@@ -557,7 +544,7 @@ public class ASPPuzzleSolver {
 		return false;
 	}
 	
-	boolean findSolutionLimitedSteps(int maxNumActions, long timeout){
+	public boolean findSolutionLimitedSteps(int maxNumActions, long timeout){
 		
 		System.out.println("ASPPuzzleSolver.findSolutionLimitedSteps() searching for solution with maximally " + maxNumActions + " actions.");
 		
@@ -576,10 +563,10 @@ public class ASPPuzzleSolver {
 		allAspRules.add("#show goal/3.");*/
 		allAspRules.add("#show does/3."); //remember that does has 3 arguments, because it is temporalized.
 		
-		boolean print = false;
+		boolean print = true;
 		Result result = ASPRunner.findModels(allAspRules, 1, print, timeout);
 		
-		if(result == null){
+		if(result == null || result.satisfiable == null){
 			return false;
 		}
 		
@@ -588,10 +575,6 @@ public class ASPPuzzleSolver {
 		if(result.satisfiable){
 			
 			String solutionString = result.solutions.get(0);
-			
-			
-			
-			
 			
 			System.out.println("ASPPuzzleSolver.findSolutionLimitedSteps() " + solutionString);
 			//this.solution = convertStringToSolution(solutionString);
