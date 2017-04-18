@@ -1,5 +1,6 @@
 package ddejonge.ggp.propnet;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -38,6 +39,9 @@ public class PropnetStateMachine extends StatefulStateMachine{
 	
 	Propnet propnet = new Propnet();
 	List<Role> roles;	
+	
+	
+	//CONSTRUCTOR
 	
 	
 	@Override
