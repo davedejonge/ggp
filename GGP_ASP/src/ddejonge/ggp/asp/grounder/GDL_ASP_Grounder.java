@@ -59,6 +59,10 @@ public class GDL_ASP_Grounder {
 			System.out.println(groundedASPRule);
 		}*/
 		
+		
+		
+		
+		
 		//convert the base propositions to GDLRelations.
 		l1 = System.currentTimeMillis();
 		List<Gdl> groundedGdlRules = new ArrayList<>();
@@ -83,6 +87,15 @@ public class GDL_ASP_Grounder {
 			
 				//convert the string into a GdlSentence
 				GdlSentence atom = ASP2GDLConverter.parseSentence(aspSentenceString);
+				
+				
+				//Remove the additional rules. Obviously a real GDL rule cannot have TRUE or DOES in its head,
+				// therefore such a rule is an additional rule that we have added for the grounding process only.
+				if(atom.getName().equals(GdlPool.TRUE) || atom.getName().equals(GdlPool.DOES)){
+					continue;
+				}
+				
+				
 				groundedGdlRules.add(atom);
 			}
 		}
@@ -90,7 +103,7 @@ public class GDL_ASP_Grounder {
 		l2 = System.currentTimeMillis();
 		
 		System.out.println("step 4 (converting ASP back to GDL) in " + (l2-l1) + " ms.");
-		
+		System.out.println(groundedGdlRules.size() + " grounded GDL rules created.");
 		/*
 		System.out.println();
 		System.out.println("GROUNDED GDL RULES:");
@@ -98,6 +111,10 @@ public class GDL_ASP_Grounder {
 			System.out.println(groundedGdlRule);
 		}
 		*/
+		
+		// There are still some  errors in the implementation of this grounder!
+		adsf;
+		
 		return groundedGdlRules;
 		
 	}
