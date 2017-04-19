@@ -102,7 +102,7 @@ public class GDL_ASP_Grounder {
 		
 		l2 = System.currentTimeMillis();
 		
-		System.out.println("step 4 (converting ASP back to GDL) in " + (l2-l1) + " ms.");
+		System.out.println("step 4 (converting ASP back to GDL) finished in " + (l2-l1) + " ms.");
 		System.out.println(groundedGdlRules.size() + " grounded GDL rules created.");
 		/*
 		System.out.println();
