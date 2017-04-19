@@ -193,9 +193,9 @@ public class FileIO {
 			
 			ArrayList<String> lines = null;
 			
-			try {
+			try (
 				BufferedReader br = new BufferedReader(new FileReader(inputFile));
-				
+				){
 				String line;
 				lines = new ArrayList<>();
 				while ((line = br.readLine()) != null) {
