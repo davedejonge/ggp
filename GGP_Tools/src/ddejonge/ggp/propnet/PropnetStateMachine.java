@@ -70,6 +70,11 @@ public class PropnetStateMachine extends StatefulStateMachine{
 			e.printStackTrace();
 		}
 		
+		
+		if(propnet.terminalProposition == null){
+			throw new RuntimeException("PropnetStateMachine.isTerminal() Error! Propnet does not contain a 'terminal' proposition!");
+		}
+		
 	}
 
 	
