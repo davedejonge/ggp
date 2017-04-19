@@ -44,7 +44,7 @@ public class Grounder {
 		//** 2. feed the file to GRINGO
 		l1 = System.currentTimeMillis();
 		
-		String[] cmd = new String[]{pathToGringo, "-t", tempFile.getAbsolutePath()};
+		String[] cmd = new String[]{pathToGringo, "-t", "--keep-facts", tempFile.getAbsolutePath()};
 		List<String> result = exec(cmd, "gringo", false);
 		
 		l2 = System.currentTimeMillis();
