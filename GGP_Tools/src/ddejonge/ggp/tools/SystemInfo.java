@@ -15,8 +15,9 @@ public class SystemInfo {
 	public static String JAVA_PROJECTS_FOLDER;
 	public static String NEGO_GAMES_FOLDER;
 	public static String GAMES_FOLDER;
-	
 	public static String EXPERIMENTS_FOLDER; 
+	
+	public static String PATH_TO_GRINGO;
 	
 	static{
 		
@@ -34,6 +35,8 @@ public class SystemInfo {
 			GAMES_FOLDER = "C:\\Users\\Dave\\Dropbox\\java projects\\GGP\\ggp-base-master\\games\\games\\";
 			
 			EXPERIMENTS_FOLDER = "C:\\Users\\30044279\\Experiments\\";
+			
+			PATH_TO_GRINGO = "C:\\Program Files\\clingo\\gringo.exe";
 		
 		}else if((new File(dropboxFolder_laptop)).exists()){
 			
@@ -45,6 +48,8 @@ public class SystemInfo {
 			GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GGP\\ggp-base-master\\games\\games\\";
 			
 			EXPERIMENTS_FOLDER = "C:\\Users\\30044279\\Experiments\\";
+			
+			PATH_TO_GRINGO = "";
 		
 		}else{
 			
