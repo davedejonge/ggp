@@ -7,22 +7,22 @@ import java.util.Set;
 
 import org.ggp.base.util.statemachine.Move;
 
-import ddejonge.ggp.propnet.heuristics.MoveCollector;
-import ddejonge.ggp.propnet.heuristics.Rollout;
 import ddejonge.ggp.tools.dataStructures.JointMove;
+import ddejonge.ggp.tools.dataStructures.MoveCollector;
+import ddejonge.ggp.tools.dataStructures.Rollout;
 
-public class MoveCollectorImpl implements MoveCollector{
+public class MoveCollectorImpl extends MoveCollector{
 	
-	Rollout rollout;
 	
 	private ArrayList<Set<Move>> roleIndex2selectedMoves;
-	int size;
+	/*int size;*/
 	
-	int numPlayers;
 	
 	public MoveCollectorImpl(int numPlayers){
-		this.numPlayers = numPlayers;
-		this.size = 0;
+		super(numPlayers);
+		/*this.size = 0;*/
+		
+		//Create a set of moves for each player.
 		roleIndex2selectedMoves = new ArrayList<Set<Move>>(numPlayers);
 		for (int i = 0; i < numPlayers; i++) {
 			roleIndex2selectedMoves.add(new HashSet<Move>());
@@ -37,10 +37,10 @@ public class MoveCollectorImpl implements MoveCollector{
 			
 			Set<Move> moveSet = roleIndex2selectedMoves.get(i);
 			moveSet.add(jointMove.get(i));
-			size++;
+			/*size++;*/
 		}
 		
-		rollout.add(jointMove);
+		super.add(jointMove);
 	}
 	
 	
@@ -50,9 +50,9 @@ public class MoveCollectorImpl implements MoveCollector{
 	@Override
 	public void add(int roleIndex, Move move){
 		roleIndex2selectedMoves.get(roleIndex).add(move);
-		size++;
+		/*size++;*/
 		
-		rollout.add(roleIndex, move);
+		super.add(roleIndex, move);
 	}
 	
 	@Override
@@ -62,26 +62,15 @@ public class MoveCollectorImpl implements MoveCollector{
 	
 	@Override
 	public void clear(){
-		size = 0;
+		/*size = 0;*/
 		for (int i = 0; i < roleIndex2selectedMoves.size(); i++) {
 			roleIndex2selectedMoves.get(i).clear();
 		}
 		
-		this.rollout = new Rollout(numPlayers);
+		super.clear();
 	}
 
-	@Override
-	public Rollout getRollOut(){
-		return this.rollout;
-	}
 	
 	
-	/**
-	 * Returns the number of single player moves in this collection (not the number of joint moves!)
-	 * @return
-	 */
-	@Override
-	public int size(){
-		return size;
-	}
+
 }
