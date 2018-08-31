@@ -17,7 +17,7 @@ import ddejonge.ggp.propnet.PropnetStateMachine;
 import ddejonge.ggp.tools.GameParser;
 import ddejonge.ggp.tools.SystemInfo;
 
-public class GDL_ASP_Grounder {
+public class GDL_ASP_Grounder{
 
 	
 	//STATIC FIELDS
