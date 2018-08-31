@@ -21,8 +21,8 @@ public class SystemInfo {
 	
 	static{
 		
-		String dropboxFolder_z1 = "C:\\Users\\Dave\\Dropbox\\";
-		String dropboxFolder_laptop = "C:\\Users\\30044279\\Dropbox\\";
+		String dropboxFolder_z1 = "C:\\Users\\BLABLABLA";
+		String dropboxFolder_laptop = "C:\\Users\\Dave\\Dropbox\\";
 				
 		
 		if((new File(dropboxFolder_z1)).exists()){
@@ -31,7 +31,7 @@ public class SystemInfo {
 			
 			DROPBOX_FOLDER = dropboxFolder_z1;
 			JAVA_PROJECTS_FOLDER = DROPBOX_FOLDER + "java projects\\";
-			NEGO_GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GGP\\GGP_Negotiations\\negoGames\\";
+			NEGO_GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GNG\\GGP_Negotiations\\negoGames\\";
 			GAMES_FOLDER = "C:\\Users\\Dave\\Dropbox\\java projects\\GGP\\ggp-base-master\\games\\games\\";
 			
 			EXPERIMENTS_FOLDER = "C:\\Users\\30044279\\Experiments\\";
@@ -44,10 +44,10 @@ public class SystemInfo {
 			
 			DROPBOX_FOLDER = dropboxFolder_laptop;
 			JAVA_PROJECTS_FOLDER = DROPBOX_FOLDER + "\\java projects\\";
-			NEGO_GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GGP\\GGP_Negotiations\\negoGames\\";
+			NEGO_GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GNG\\GGP_Negotiations\\negoGames\\";
 			GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GGP\\ggp-base-master\\games\\games\\";
 			
-			EXPERIMENTS_FOLDER = "C:\\Users\\30044279\\Experiments\\";
+			EXPERIMENTS_FOLDER = "C:\\Users\\Dave\\Experiments\\";
 			
 			PATH_TO_GRINGO = "";
 		

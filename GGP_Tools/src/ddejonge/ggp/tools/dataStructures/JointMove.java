@@ -56,7 +56,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public void add(int index, Move element) {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.add() Error! Not implemented.");
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public boolean addAll(Collection<? extends Move> c) {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.addAll() Error!  Not implemented.");
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public boolean addAll(int index, Collection<? extends Move> c) {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.addAll() Error! Not implemented.");
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public boolean contains(Object o) {
-		throw new NotImplementedException();
+			throw new RuntimeException("JointMove.contains() Error! Not implemented.");
 	}
 
 	
@@ -104,7 +104,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.containsAll() Error! Not implemented.");
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public int indexOf(Object o) {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.indexOf() Error! Not implemented.");
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public int lastIndexOf(Object o) {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.lastIndexOf() Error! Not implemented.");
 	}
 
 	
@@ -155,7 +155,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public ListIterator<Move> listIterator() {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.listIterator() Error! Not implemented.");
 	}
 
 	
@@ -166,7 +166,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public ListIterator<Move> listIterator(int index) {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.listIterator() Error! Not implemented.");
 	}
 
 	
@@ -177,7 +177,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public boolean remove(Object o) {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.remove() Error! Not implemented.");
 	}
 
 	@Override
@@ -201,7 +201,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.removeAll() Error! Not implemented.");
 	}
 
 	
@@ -212,7 +212,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.retainAll() Error! Not implemented.");
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public class JointMove implements Serializable, List<Move> {
 	 */
 	@Override
 	public List<Move> subList(int fromIndex, int toIndex) {
-		throw new NotImplementedException();
+		throw new RuntimeException("JointMove.subList() Error! Not implemented.");
 	}
 
 	@Override
@@ -303,7 +303,7 @@ public class JointMove implements Serializable, List<Move> {
 
 		@Override
 		public void remove() {
-			throw new NotImplementedException();
+			throw new RuntimeException("JointMove.MoveListIterator.remove() Error! Not implemented.");
 		}
 		
 	}

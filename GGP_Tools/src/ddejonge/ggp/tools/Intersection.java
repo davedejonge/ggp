@@ -46,7 +46,7 @@ public class Intersection {
 			Collections.sort(listOfLists.get(i));
 		}
 		
-		throw new NotImplementedException();
+		throw new RuntimeException("Intersection.getIntersection2() Error! Not implemented.");
 		
 	}
 }

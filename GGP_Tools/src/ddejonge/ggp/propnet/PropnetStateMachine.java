@@ -23,9 +23,9 @@ import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 
 import ddejonge.ggp.StatefulStateMachine;
 import ddejonge.ggp.propnet.heuristics.Heuristics;
-import ddejonge.ggp.propnet.heuristics.MoveCollector;
 import ddejonge.ggp.tools.Utils;
 import ddejonge.ggp.tools.dataStructures.JointMove;
+import ddejonge.ggp.tools.dataStructures.MoveCollector;
 
 
 public class PropnetStateMachine extends StatefulStateMachine{

@@ -1,12 +1,11 @@
-package ddejonge.ggp.propnet.heuristics;
+package ddejonge.ggp.tools.dataStructures;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.ggp.base.util.statemachine.Move;
-
-import ddejonge.ggp.tools.dataStructures.JointMove;
 
 
 public class Rollout {
@@ -21,13 +20,10 @@ public class Rollout {
 		this.numPlayers = numPlayers;
 	}
 	
-	
 	/**Is called during rollout, every time a new joint move is chosen.*/
 	public void add(JointMove jointMove){
 		jointMoveSequence.add(jointMove);
 	}
-	
-	
 	
 	
 	
@@ -51,16 +47,11 @@ public class Rollout {
 	}
 	
 	
-	public void setGoals(int[] utilities){
-		this.goals = Arrays.copyOf(utilities, numPlayers);
-	}
-	
-	public int[] getGoals(){
-		return Arrays.copyOf(goals, numPlayers);
-	}
+
 	
 	public List<JointMove> getJointMoveSequence(){
-		return new ArrayList<JointMove>(this.jointMoveSequence);
+		return Collections.unmodifiableList(this.jointMoveSequence);
+		//return new ArrayList<JointMove>(this.jointMoveSequence);
 	}
 	
 	public void clear(){
@@ -69,5 +60,29 @@ public class Rollout {
 		this.goals = null;
 	}
 	
+	/**
+	 * Returns the number of single player moves in this collection (not the number of joint moves!)
+	 * @return
+	 */
+	public int size(){
+		
+		int numMoves = 0;
+		if(incompleteJointMove != null) {
+			numMoves += this.incompleteJointMove.size();
+		}
+		
+		numMoves += numPlayers*this.jointMoveSequence.size();
+		
+		return numMoves;
+	}
 	
+	
+	
+	public void setGoals(int[] utilities){
+		this.goals = Arrays.copyOf(utilities, numPlayers);
+	}
+	
+	public int[] getGoals(){
+		return Arrays.copyOf(goals, numPlayers);
+	}
 }

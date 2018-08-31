@@ -44,7 +44,7 @@ public class SmartRenamer {
 				rename(and.get(i), usedVars, simpleRenamer);
 			}
 			
-			throw new NotImplementedException();
+			throw new RuntimeException("SmartRenamer.rename() Error! not implemented.");
 			
 		}else if(formula instanceof GdlOr){
 			GdlOr or = (GdlOr) formula;
@@ -67,22 +67,22 @@ public class SmartRenamer {
 		}else if(formula instanceof GdlSentence){
 			GdlSentence sentence = (GdlSentence) formula;
 			
-			throw new NotImplementedException();
+			throw new RuntimeException("SmartRenamer.rename() Error! not implemented. GdlSentence");
 			
 		}else if(formula instanceof GdlProposition){
 			GdlProposition proposition = (GdlProposition) formula;
 			
-			throw new NotImplementedException();
+			throw new RuntimeException("SmartRenamer.rename() Error! not implemented. GdlProposition");
 			
 		}else if(formula instanceof GdlRelation){
 			GdlRelation relation = (GdlRelation) formula;
 			
-			throw new NotImplementedException();
+			throw new RuntimeException("SmartRenamer.rename() Error! not implemented. GdlRelation");
 			
 		}else if(formula instanceof GdlDistinct){
 			GdlDistinct distinct = (GdlDistinct) formula;
 			
-			throw new NotImplementedException();
+			throw new RuntimeException("SmartRenamer.rename() Error! not implemented. GdlDistinct");
 			
 		}else{
 			throw new RuntimeException("SmartRenamer.simplify() Error! " + formula.getClass().getName());

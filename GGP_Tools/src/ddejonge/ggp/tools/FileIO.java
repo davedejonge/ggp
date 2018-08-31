@@ -64,7 +64,7 @@ public class FileIO {
 		
 	}
 	
-	public static void strings2file(File file, String content, boolean append){
+	public static void string2file(File file, String content, boolean append){
 		
 		ArrayList<String> contentAsList = new ArrayList<>(1);
 		contentAsList.add(content);

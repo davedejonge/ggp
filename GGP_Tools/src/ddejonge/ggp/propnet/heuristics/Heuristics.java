@@ -5,6 +5,8 @@ import java.util.Random;
 
 import org.ggp.base.util.statemachine.MachineState;
 
+import ddejonge.ggp.tools.dataStructures.MoveCollector;
+
 
 public abstract class Heuristics {
 
