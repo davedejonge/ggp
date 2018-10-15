@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.ggp.base.util.gdl.grammar.GdlSentence;
 
-public class ZobristHasher {
+public class ZobristStateHasher {
 
 	Random random = new Random();
 	HashMap<GdlSentence, Long> map = new HashMap<>(4096);
