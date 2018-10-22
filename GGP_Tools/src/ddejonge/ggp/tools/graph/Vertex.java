@@ -60,6 +60,10 @@ public class Vertex{
 		return this.outgoingEdges != null && !this.outgoingEdges.isEmpty();
 	}
 
+	/**
+	 * May return null if there are no outgoing edges.
+	 * @return
+	 */
 	public List<? extends Edge> getOutgoingEdges(){
 		if(outgoingEdges == null){
 			return null;

@@ -54,13 +54,29 @@ public class GameParser {
 		return fileContent2rules(fileContent);
 	}
 	
+	
 	/**
 	 * Converts the text content of a Game Description File into GDL rules.
+	 */
+	public static List<Gdl> fileContent2rules(List<String> fileContent){
+		
+		StringBuilder sb = new StringBuilder();
+		for (String line : fileContent) {
+			sb.append(line);
+		}
+		
+		return fileContent2rules(sb.toString());
+	}
+	
+	
+	/**
+	 * Converts the text content of a Game Description File into GDL rules, where the content is given as one single String.
 	 */
 	public static List<Gdl> fileContent2rules(String fileContent){
 		return Game.createEphemeralGame(Game.preprocessRulesheet(fileContent)).getRules();
 	}
 	
+
 	
 	/**
 	 * Given the path to the folder in which a certain game is stored, it reads the METADATA file, and extracts from it the name of the file that contains the GDL description.

@@ -24,7 +24,7 @@ public class TranspositionTable<V> {
 	
 	
 	//FIELDS
-	ZobristHasher hasher = new ZobristHasher();
+	ZobristStateHasher hasher = new ZobristStateHasher();
 	List<PointerNode<V>> roots; //we store a separate tree for each round of the game.
 	
 	public TranspositionTable(){

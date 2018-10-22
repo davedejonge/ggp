@@ -58,7 +58,7 @@ public class Utils {
 	}
 	
 	/**
-	 * Rounds off a number to the given number of digits.
+	 * Rounds off a number to the given number of digits behind the decimal point.
 	 * @param number
 	 * @param numDigits
 	 * @return

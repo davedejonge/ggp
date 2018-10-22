@@ -7,7 +7,7 @@ import java.io.File;
 public class SystemInfo {
 
 	
-	public enum Location {UNKNOWN, Z1, LAPTOP};
+	public enum Location {UNKNOWN, DESKTOP, LAPTOP};
 	
 	public static Location currentLocation;
 	
@@ -21,29 +21,29 @@ public class SystemInfo {
 	
 	static{
 		
-		String dropboxFolder_z1 = "C:\\Users\\BLABLABLA";
-		String dropboxFolder_laptop = "C:\\Users\\Dave\\Dropbox\\";
+		String myUserFolder_desktop = "C:\\Users\\dave_\\";
+		String myUserFolder_laptop = "C:\\Users\\Dave\\";
 				
 		
-		if((new File(dropboxFolder_z1)).exists()){
+		if((new File(myUserFolder_desktop)).exists()){
 			
-			currentLocation = Location.Z1;
+			currentLocation = Location.DESKTOP;
 			
-			DROPBOX_FOLDER = dropboxFolder_z1;
+			DROPBOX_FOLDER = myUserFolder_desktop + "Dropbox\\";
 			JAVA_PROJECTS_FOLDER = DROPBOX_FOLDER + "java projects\\";
 			NEGO_GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GNG\\GGP_Negotiations\\negoGames\\";
-			GAMES_FOLDER = "C:\\Users\\Dave\\Dropbox\\java projects\\GGP\\ggp-base-master\\games\\games\\";
+			GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GGP\\ggp-base-master\\games\\games\\";
 			
-			EXPERIMENTS_FOLDER = "C:\\Users\\30044279\\Experiments\\";
+			EXPERIMENTS_FOLDER = "C:\\Users\\dave_\\Experiments\\";
 			
 			PATH_TO_GRINGO = "C:\\Program Files\\clingo\\gringo.exe";
 		
-		}else if((new File(dropboxFolder_laptop)).exists()){
+		}else if((new File(myUserFolder_laptop)).exists()){
 			
 			currentLocation = Location.LAPTOP;
 			
-			DROPBOX_FOLDER = dropboxFolder_laptop;
-			JAVA_PROJECTS_FOLDER = DROPBOX_FOLDER + "\\java projects\\";
+			DROPBOX_FOLDER = myUserFolder_laptop + "Dropbox\\";
+			JAVA_PROJECTS_FOLDER = DROPBOX_FOLDER + "java projects\\";
 			NEGO_GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GNG\\GGP_Negotiations\\negoGames\\";
 			GAMES_FOLDER = JAVA_PROJECTS_FOLDER + "GGP\\ggp-base-master\\games\\games\\";
 			

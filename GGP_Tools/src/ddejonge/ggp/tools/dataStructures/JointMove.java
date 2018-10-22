@@ -261,6 +261,7 @@ public class JointMove implements Serializable, List<Move> {
 		return Arrays.toString(array);
 	}
 	
+	@Override
 	public boolean equals(Object object){
 		
 		if( ! (object instanceof JointMove)){
@@ -275,6 +276,11 @@ public class JointMove implements Serializable, List<Move> {
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(array);
 	}
 	
 	class MoveListIterator implements Iterator<Move>{
