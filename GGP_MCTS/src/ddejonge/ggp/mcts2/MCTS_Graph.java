@@ -472,11 +472,12 @@ class MCTS_Graph extends Graph<MCTS_Node, MCTS_Edge>{
 					monitor.setValue("Time:", deadlineToDisplay - currentTime, false);
 					monitor.setValue("Nodes generated:", numNodesInTree, false);
 					monitor.setValue("Edges generated:", Edge.edgesGenerated, true);
+					try {
+						Thread.sleep(25);
+					} catch (InterruptedException e) {
+					}
 				}
-				try {
-					Thread.sleep(25);
-				} catch (InterruptedException e) {
-				}
+
 			}
 			
 		}
